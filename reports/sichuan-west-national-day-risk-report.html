@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>国庆川西自驾路线风险评估报告</title>
+  <style>
+    @page { size: A4; margin: 14mm 15mm 15mm; }
+    :root {
+      --navy: #102c55;
+      --blue: #1d5f94;
+      --gold: #c58b28;
+      --pale: #f2f6fa;
+      --line: #d7e0e9;
+      --ink: #1d2a38;
+      --muted: #5f6e7d;
+      --red: #b53c35;
+      --orange: #b56d20;
+      --green: #3c765a;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      color: var(--ink);
+      background: white;
+      font-family: "Microsoft YaHei", "Noto Sans CJK SC", "PingFang SC", Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.65;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .page { min-height: 267mm; page-break-after: always; position: relative; }
+    .page:last-child { page-break-after: auto; }
+    .cover {
+      min-height: 267mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 18mm 13mm 13mm;
+      background: linear-gradient(145deg, #f7fafc 0%, #ffffff 54%, #eef4f8 100%);
+      border: 1px solid #dce6ef;
+    }
+    .cover-top { border-top: 10px solid var(--navy); padding-top: 15mm; }
+    .eyebrow { color: var(--gold); font-size: 11pt; font-weight: 700; letter-spacing: 1.5px; }
+    h1 { color: var(--navy); font-size: 31pt; line-height: 1.2; margin: 8mm 0 4mm; letter-spacing: 0; }
+    .subtitle { color: var(--blue); font-size: 16pt; font-weight: 700; margin-bottom: 12mm; }
+    .meta { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; max-width: 145mm; }
+    .meta div { background: white; border: 1px solid var(--line); padding: 3mm 4mm; }
+    .meta b { display: block; color: var(--muted); font-size: 8.5pt; font-weight: 600; }
+    .meta span { display: block; color: var(--navy); font-size: 11.5pt; font-weight: 700; margin-top: 1mm; }
+    .cover-callout { border-left: 5px solid var(--gold); background: #fffaf0; padding: 5mm 6mm; font-size: 13pt; line-height: 1.55; }
+    .cover-callout strong { color: var(--red); }
+    .cover-foot { display: flex; justify-content: space-between; color: var(--muted); font-size: 8.5pt; border-top: 1px solid var(--line); padding-top: 4mm; }
+    h2 { color: var(--navy); font-size: 18pt; line-height: 1.3; margin: 0 0 5mm; padding-bottom: 2.5mm; border-bottom: 3px solid var(--gold); }
+    h3 { color: var(--blue); font-size: 12.5pt; margin: 6mm 0 2mm; }
+    p { margin: 2mm 0; }
+    .lead { font-size: 12pt; line-height: 1.7; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; }
+    .risk-card { border: 1px solid var(--line); padding: 4mm; background: #fff; min-height: 30mm; }
+    .risk-card .label { font-size: 8.5pt; color: var(--muted); }
+    .risk-card .value { font-size: 16pt; font-weight: 800; margin: 1mm 0; }
+    .risk-high .value { color: var(--red); }
+    .risk-mid .value { color: var(--orange); }
+    .risk-info .value { color: var(--blue); }
+    .note { background: var(--pale); border-left: 4px solid var(--blue); padding: 3.5mm 4mm; margin: 4mm 0; }
+    .warning { background: #fff5ef; border-left: 4px solid var(--red); padding: 3.5mm 4mm; margin: 4mm 0; }
+    .good { background: #f1f8f3; border-left: 4px solid var(--green); padding: 3.5mm 4mm; margin: 4mm 0; }
+    table { width: 100%; border-collapse: collapse; margin: 3mm 0 5mm; font-size: 9.2pt; }
+    th { background: var(--navy); color: white; text-align: left; padding: 2.5mm 2.8mm; font-weight: 700; }
+    td { border: 1px solid var(--line); padding: 2.5mm 2.8mm; vertical-align: top; }
+    tr:nth-child(even) td { background: #f8fafc; }
+    tr { break-inside: avoid; }
+    .tag { display: inline-block; padding: 0.7mm 2mm; font-size: 8pt; font-weight: 700; color: white; margin-right: 1mm; }
+    .tag-red { background: var(--red); }
+    .tag-orange { background: var(--orange); }
+    .tag-blue { background: var(--blue); }
+    .tag-green { background: var(--green); }
+    .route { display: flex; align-items: stretch; gap: 2mm; margin: 3mm 0 6mm; }
+    .route-step { flex: 1; text-align: center; border: 1px solid var(--line); background: #f8fafc; padding: 2.5mm 1.5mm; font-size: 8.5pt; }
+    .route-step b { display: block; color: var(--navy); font-size: 11pt; }
+    .route-arrow { display: flex; align-items: center; color: var(--gold); font-size: 15pt; }
+    .quote { margin: 3mm 0; padding: 3mm 4mm; background: #fffaf0; border: 1px solid #ead9ae; font-size: 9.5pt; }
+    .quote b { color: var(--navy); }
+    ul { margin: 2mm 0 3mm 5mm; padding-left: 4mm; }
+    li { margin: 1.3mm 0; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+    .small { color: var(--muted); font-size: 8.5pt; }
+    .source { color: #3d607e; font-size: 8.5pt; word-break: break-all; }
+    a { color: #1b5f95; text-decoration: none; }
+    .footer { position: absolute; bottom: 0; left: 0; right: 0; color: #7b8792; font-size: 8pt; border-top: 1px solid var(--line); padding-top: 2mm; display: flex; justify-content: space-between; }
+    .avoid-break { break-inside: avoid; }
+    @media screen { body { max-width: 210mm; margin: 0 auto; padding: 8mm; background: #e9eef3; } .page, .cover { background: white; margin-bottom: 8mm; } }
+  </style>
+</head>
+<body>
+  <section class="page cover">
+    <div class="cover-top">
+      <div class="eyebrow">2026 NATIONAL DAY · ROUTE RISK REVIEW</div>
+      <h1>国庆川西自驾<br>路线风险评估报告</h1>
+      <div class="subtitle">成都出发 · 川西大环线 + 稻城亚丁深度线</div>
+      <div class="meta">
+        <div><b>行程形式</b><span>6 人定制团 / 自驾</span></div>
+        <div><b>行程窗口</b><span>10 月 1 日接机，10 月 8 日送机</span></div>
+        <div><b>路线总里程</b><span>约 1,586 km</span></div>
+        <div><b>关键限制</b><span>不含景区观光车与排队时间</span></div>
+      </div>
+      <div style="height: 18mm"></div>
+      <div class="cover-callout"><strong>核心判断：会堵，而且原行程的 D2、D3、D7 风险明显偏高。</strong><br>最大问题不是总里程本身，而是把热门景区、长距离山路、高海拔徒步和国庆返程压在同一个时间窗口内。</div>
+    </div>
+    <div class="cover-foot"><span>基于小红书 MCP 实测笔记、评论、高德路线基线及公开交通预判</span><span>生成日期：2026-08-16</span></div>
+  </section>
+
+  <section class="page">
+    <h2>一、结论摘要</h2>
+    <p class="lead">这份路线在平日、专业司机和天气良好的情况下可以完成，但放到国庆黄金周，不建议按宣传图上的节奏执行。尤其是 D7“稻城→新都桥→塔公→红海子→成都”，同时叠加长距离、高峰返程和多个景点停留，属于全程最高风险段。</p>
+    <div class="grid-3">
+      <div class="risk-card risk-high"><div class="label">拥堵风险</div><div class="value">高</div><div>318、折多山、热门景区支线</div></div>
+      <div class="risk-card risk-high"><div class="label">疲劳驾驶风险</div><div class="value">高</div><div>单日可能从 5 小时变成 8—12 小时</div></div>
+      <div class="risk-card risk-mid"><div class="label">高反与天气风险</div><div class="value">中高</div><div>新都桥、理塘、亚丁连续升高</div></div>
+    </div>
+    <h3>最需要关注的三个日期</h3>
+    <table>
+      <thead><tr><th style="width: 18%">日期</th><th style="width: 28%">对应行程</th><th>风险判断</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tag-red">10/2</span></td><td>D2 成都—四姑娘山—丹巴</td><td>历史上属于进甘孜方向的高峰窗口；当天还要完成景区游览和转场。</td></tr>
+        <tr><td><span class="tag tag-red">10/3</span></td><td>D3 丹巴—墨石—鱼子西—雅江</td><td>热门景点连续串联，支线道路窄，停车和拍照时间不可控。</td></tr>
+        <tr><td><span class="tag tag-red">10/7</span></td><td>D7 稻城—新都桥—塔公—红海子—成都</td><td>历史返程高峰叠加全程最长转场，按原计划边玩边回成都不现实。</td></tr>
+      </tbody>
+    </table>
+    <div class="warning"><b>建议底线：</b>至少拆开 D7，最好再拆开 D2；如果只能维持 8 天，必须删减景点并调整返程航班，不能把长途自驾和送机安排在同一天。</div>
+    <h3>路线结构</h3>
+    <div class="route">
+      <div class="route-step"><b>D2</b>四姑娘山<br>丹巴</div><div class="route-arrow">→</div>
+      <div class="route-step"><b>D3</b>墨石<br>鱼子西</div><div class="route-arrow">→</div>
+      <div class="route-step"><b>D4-D6</b>雅江<br>理塘 · 亚丁</div><div class="route-arrow">→</div>
+      <div class="route-step"><b>D7</b>稻城<br>成都</div>
+    </div>
+    <div class="footer"><span>国庆川西自驾路线风险评估</span><span>1</span></div>
+  </section>
+
+  <section class="page">
+    <h2>二、逐日风险拆解</h2>
+    <table>
+      <thead><tr><th style="width: 10%">日期</th><th style="width: 25%">路线</th><th style="width: 15%">等级</th><th>问题与建议</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>D1</td><td>成都接机</td><td><span class="tag tag-green">低</span></td>
+          <td>建议把采购、车辆检查、氧气和保暖用品放在当天，不要临时挤进后续山路日。</td>
+        </tr>
+        <tr>
+          <td>D2<br><span class="small">10/2</span></td><td>成都—四姑娘山—丹巴</td><td><span class="tag tag-red">高</span></td>
+          <td>高德当前成都到四姑娘山约 233 km、5 小时 45 分，尚未计国庆拥堵、景区排队和停车。游览后继续到丹巴，实际可能超过 10—12 小时。<br><b>建议：</b>成都→四姑娘山镇住一晚，四姑娘山游览后再去丹巴。</td>
+        </tr>
+        <tr>
+          <td>D3<br><span class="small">10/3</span></td><td>丹巴—墨石—鱼子西—雅江</td><td><span class="tag tag-red">高</span></td>
+          <td>三个热门节点连续串联，墨石和鱼子西都存在入口、停车、拍照等待。鱼子西到雅江当前基线约 96 km、2 小时 40 分，若傍晚才离开，山路和大雾风险上升。<br><b>建议：</b>墨石、鱼子西二选一，或住塔公/新都桥，不要强行赶雅江。</td>
+        </tr>
+        <tr>
+          <td>D4<br><span class="small">10/4</span></td><td>雅江—理塘—海子山—香格里拉镇</td><td><span class="tag tag-red">高</span></td>
+          <td>长距离转场叠加连续升高，海子山和理塘都不是“顺路停十分钟”的点。到达香格里拉镇后，第二天还要走亚丁长线，恢复时间不足。<br><b>建议：</b>以安全到达为主，海子山作为天气和时间允许时的备选。</td>
+          <td>D5</td><td>亚丁长线</td><td><span class="tag tag-orange">中高</span></td>
+
+  <section class="page">
+    <h2>三、小红书实测与公开路况依据</h2>
+    <h3>小红书 MCP 读取到的国庆实测</h3>
+    <div class="quote"><b>《10.3 才是川西国庆开始，成都到新都桥 12 小时》</b><br>评论提到上格底拉姆路段“堵成这样”，回复中出现“一路上都是趴窝的车”；另有评论提醒不熟悉路况不要夜间行车，原因包括落石、塌方、弯多路窄。</div>
+    <div class="quote"><b>《国庆 317 不堵车小众路线，酒店怒省一亿》</b><br>正文和 135 条评论显示：小众线大部分时间人少车少，但返程折多山遇大雾堵车；评论明确提到“国庆从 318 回，肯定堵”。墨石、塔公仍是难以完全避开的热门节点。</div>
+    <p class="small">小红书内容属于游客经验和创作者分享，不是交通统计；本报告将其作为真实体验样本，并与官方交通预判、高德路线基线交叉使用。</p>
+    <h3>公开交通预判</h3>
+    <table>
+      <thead><tr><th>来源</th><th>可用于本路线的结论</th></tr></thead>
+      <tbody>
+        <tr><td>甘孜交警历年国庆预判</td><td>通常呈潮汐流：10/2—10/3 进州压力较大，10/6—10/7 返程压力较大。</td></tr>
+        <tr><td>2025 甘孜国庆交通保障通告</td><td>G318 泸定—雅江、G248 新都桥—八美、G350 八美—道孚、雅康高速均属于需要重点关注的通道。</td></tr>
+        <tr><td>公开自驾实测</td><td>成都出城、丹巴县城、434 省道、墨石公园入口和折多山均出现过明显缓行或排队。</td></tr>
+      </tbody>
+    </table>
+    <h3>参考链接</h3>
+    <p class="source"><a href="https://news.qq.com/rain/a/20240928A02ZEU00">腾讯/红星新闻：国庆游川西进甘孜高峰预判</a></p>
+    <p class="source"><a href="https://www.ganzitv.com/cms/a/171012170/content">甘孜州：国庆期间部分路段交通管制通告</a></p>
+    <p class="source"><a href="https://bbs.xiaopeng.com/article/3572958">公开自驾实测：国庆假期的川西之行</a></p>
+    <div class="footer"><span>实测与公开资料</span><span>3</span></div>
+  </section>
+
+  <section class="page">
+    <h2>四、建议如何修改</h2>
+    <div class="warning"><b>优先级最高：修改 D7。</b>如果 D7 不拆分，前面任何错峰安排都无法消除返程当天的疲劳驾驶和误机风险。</div>
+    <table>
+      <thead><tr><th style="width: 18%">原安排</th><th style="width: 38%">建议调整</th><th>目的</th></tr></thead>
+      <tbody>
+        <tr><td>D2 成都—四姑娘山—丹巴</td><td>成都—四姑娘山镇，住一晚；次日游览后再去丹巴</td><td>避免第一天长距离加景区游览</td></tr>
+        <tr><td>D3 丹巴—墨石—鱼子西—雅江</td><td>墨石、鱼子西二选一；住宿放在塔公或新都桥更稳</td><td>减少景区支线和夜间山路</td></tr>
+
+  <section class="page">
+    <h2>五、出发前检查清单</h2>
+</body>
+</html>

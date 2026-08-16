@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>川西低拥堵深度自驾路线图</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <style>
+    :root { --navy:#122d52; --blue:#1c6093; --gold:#b98527; --red:#b54536; --ink:#1c2a38; --muted:#667583; --line:#dce4eb; --pale:#f3f7fa; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:#eef2f5; font-family:"Microsoft YaHei","Noto Sans CJK SC",Arial,sans-serif; line-height:1.6; }
+    .shell { max-width:1180px; margin:0 auto; padding:24px; }
+    header { background:var(--navy); color:white; padding:30px 34px; border-bottom:6px solid var(--gold); }
+    header h1 { margin:0 0 8px; font-size:32px; line-height:1.2; letter-spacing:0; }
+    header p { margin:0; color:#d9e7f3; font-size:15px; }
+    .notice { margin-top:18px; padding:14px 18px; background:#fff8e8; border-left:5px solid var(--gold); color:#5e471c; }
+    .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:18px 0; }
+    .stat { background:white; border:1px solid var(--line); padding:14px 16px; }
+    .stat b { display:block; color:var(--muted); font-size:12px; }
+    .stat strong { display:block; color:var(--navy); font-size:20px; margin-top:2px; }
+    section { background:white; border:1px solid var(--line); margin:18px 0; padding:20px; }
+    h2 { margin:0 0 14px; padding-bottom:8px; color:var(--navy); border-bottom:3px solid var(--gold); font-size:21px; }
+    .map-wrap { position:relative; overflow:hidden; border:1px solid var(--line); background:#fbfcfd; }
+    .map-wrap svg { display:block; width:100%; height:auto; }
+    .map-label { font-size:16px; fill:var(--navy); font-weight:700; }
+    .map-small { font-size:12px; fill:var(--muted); }
+    .terrain { fill:#eef4f7; stroke:#d6e0e7; stroke-width:2; }
+    .route-line { fill:none; stroke:var(--red); stroke-width:6; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:12 10; }
+    .route-node { fill:white; stroke:var(--red); stroke-width:5; }
+    .route-node-num { fill:var(--red); }
+    .route-node-text { fill:white; font-size:12px; font-weight:700; text-anchor:middle; dominant-baseline:middle; }
+    #map { height:500px; border:1px solid var(--line); }
+    .map-note { color:var(--muted); font-size:12px; margin-top:8px; }
+    .day-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+    .day { border:1px solid var(--line); padding:14px; background:#fff; }
+    .day.critical { border-left:5px solid var(--red); }
+    .day.good { border-left:5px solid #3f7c61; }
+    .day h3 { margin:0 0 5px; color:var(--blue); font-size:16px; }
+    .day p { margin:4px 0; font-size:14px; }
+    .risk { display:inline-block; padding:2px 7px; color:white; font-size:11px; font-weight:700; margin-left:4px; }
+    .risk.high { background:var(--red); }
+    .risk.mid { background:var(--gold); }
+    .risk.low { background:#3f7c61; }
+    .nav { display:inline-block; margin-top:6px; padding:4px 9px; background:#edf5fa; color:var(--blue); font-size:12px; text-decoration:none; border:1px solid #cbdfea; }
+    table { width:100%; border-collapse:collapse; font-size:14px; }
+    th { background:var(--navy); color:white; text-align:left; padding:9px; }
+    td { border:1px solid var(--line); padding:9px; vertical-align:top; }
+    tr:nth-child(even) td { background:#f8fafc; }
+    .two { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .card { background:var(--pale); padding:15px; border-left:4px solid var(--blue); }
+    .card.warn { background:#fff4ef; border-left-color:var(--red); }
+    ul { margin:7px 0 0 18px; padding:0; }
+    li { margin:4px 0; }
+    footer { color:var(--muted); font-size:12px; padding:4px 0 20px; }
+    @media (max-width:760px) { .shell { padding:12px; } header { padding:22px 20px; } header h1 { font-size:25px; } .stats, .day-grid, .two { grid-template-columns:1fr; } section { padding:14px; } #map { height:380px; } .map-label { font-size:18px; } }
+    @media print { body { background:white; } .shell { max-width:none; padding:0; } header { break-after:avoid; } section { break-inside:avoid; } #map { display:none; } .nav { color:var(--blue); } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <h1>川西低拥堵深度自驾路线图</h1>
+      <p>北进阿坝 · 甘孜腹地慢游 · 道孚/党岭 · 丹巴 · 四姑娘山 · 成都</p>
+    </header>
+
+    <div class="notice"><b>路线定位：</b>这是“低拥堵优先”的 10 天基线方案，不追求一次打完稻城亚丁、318 和所有网红点；用更多县城停留和小众支线换取更少排队、更低返程压力。国庆正假期仍无法保证不堵，最有效的错峰是提前 1—2 天出发、延后 1 天返程。</div>
+
+    <div class="stats">
+      <div class="stat"><b>建议天数</b><strong>10 天 / 9 晚</strong></div>
+      <div class="stat"><b>核心策略</b><strong>避开 318 主峰</strong></div>
+      <div class="stat"><b>推荐驾驶配置</b><strong>2 名驾驶员</strong></div>
+      <div class="stat"><b>路线强度</b><strong>中高，需有高原经验</strong></div>
+    </div>
+
+    <section>
+      <h2>路线总览</h2>
+      <div class="map-wrap">
+        <svg viewBox="0 0 1000 570" role="img" aria-label="川西低拥堵深度自驾路线示意图">
+          <path class="terrain" d="M85,475 C130,400 115,310 190,220 C270,125 380,95 500,120 C620,65 805,95 920,170 L890,460 C760,505 620,520 470,505 C320,530 170,530 85,475Z"/>
+          <path d="M130,430 C260,360 265,205 420,190 C545,176 645,130 835,200" fill="none" stroke="#dce7ed" stroke-width="18" opacity=".85"/>
+          <path d="M180,470 C330,365 385,270 510,245 C650,215 725,180 870,245" fill="none" stroke="#cbdde7" stroke-width="3" stroke-dasharray="9 12"/>
+          <text x="720" y="125" class="map-small">阿坝北线 / 甘孜腹地</text>
+          <text x="610" y="475" class="map-small">避开传统 318 主峰</text>
+          <polyline class="route-line" points="875,435 755,352 645,250 470,230 360,290 500,350 590,390 730,410 805,385 875,435"/>
+          <g><circle class="route-node" cx="875" cy="435" r="15"/><circle class="route-node-num" cx="875" cy="435" r="10"/><text class="route-node-text" x="875" y="435">1</text><text class="map-label" x="892" y="442">成都</text></g>
+          <g><circle class="route-node" cx="755" cy="352" r="15"/><circle class="route-node-num" cx="755" cy="352" r="10"/><text class="route-node-text" x="755" y="352">2</text><text class="map-label" x="770" y="345">理县</text></g>
+          <g><circle class="route-node" cx="645" cy="250" r="15"/><circle class="route-node-num" cx="645" cy="250" r="10"/><text class="route-node-text" x="645" y="250">3</text><text class="map-label" x="660" y="245">马尔康</text></g>
+          <g><circle class="route-node" cx="470" cy="230" r="15"/><circle class="route-node-num" cx="470" cy="230" r="10"/><text class="route-node-text" x="470" y="230">4</text><text class="map-label" x="450" y="205">炉霍</text></g>
+          <g><circle class="route-node" cx="360" cy="290" r="15"/><circle class="route-node-num" cx="360" cy="290" r="10"/><text class="route-node-text" x="360" y="290">5</text><text class="map-label" x="300" y="285">甘孜</text></g>
+          <g><circle class="route-node" cx="500" cy="350" r="15"/><circle class="route-node-num" cx="500" cy="350" r="10"/><text class="route-node-text" x="500" y="350">6</text><text class="map-label" x="515" y="345">道孚</text></g>
+          <g><circle class="route-node" cx="590" cy="390" r="15"/><circle class="route-node-num" cx="590" cy="390" r="10"/><text class="route-node-text" x="590" y="390">7</text><text class="map-label" x="605" y="385">玉科/党岭</text></g>
+          <g><circle class="route-node" cx="730" cy="410" r="15"/><circle class="route-node-num" cx="730" cy="410" r="10"/><text class="route-node-text" x="730" y="410">8</text><text class="map-label" x="745" y="405">丹巴</text></g>
+          <g><circle class="route-node" cx="805" cy="385" r="15"/><circle class="route-node-num" cx="805" cy="385" r="10"/><text class="route-node-text" x="805" y="385">9</text><text class="map-label" x="790" y="365">四姑娘山</text></g>
+          <text x="85" y="535" class="map-small">示意图：节点和连线用于路线结构判断，实际道路以出发当天导航和交通管制为准。</text>
+        </svg>
+      </div>
+      <div class="map-note">下方交互地图需要网络加载 OpenStreetMap 底图；路线节点来自高德地理编码，地图上的连线是节点示意，不代表精确道路轨迹。</div>
+      <div id="map"></div>
+    </section>
+
+    <section>
+      <h2>10 天行程建议</h2>
+      <div class="day-grid">
+        <article class="day good"><h3>D1 成都 → 理县 <span class="risk low">低至中</span></h3><p>先进入阿坝北线，住理县。不要第一天就冲高海拔。</p><a class="nav" target="_blank" href="https://uri.amap.com/navigation?from=104.066301,30.572961&to=103.163284,31.435831&mode=car&policy=1">打开高德路线</a></article>
+        <article class="day"><h3>D2 理县 → 马尔康 <span class="risk mid">中</span></h3><p>以道路和沿途藏羌村寨为主，避开四姑娘山景区入口高峰。</p><a class="nav" target="_blank" href="https://uri.amap.com/navigation?from=103.163284,31.435831&to=102.206386,31.905799&mode=car&policy=1">打开高德路线</a></article>
+        <article class="day"><h3>D3 马尔康 → 炉霍 <span class="risk mid">中</span></h3><p>进入甘孜腹地，住宿选择县城，补给和休息比扎营更稳。</p><a class="nav" target="_blank" href="https://uri.amap.com/navigation?from=102.206386,31.905799&to=100.676014,31.390657&mode=car&policy=1">打开高德路线</a></article>
+        <article class="day"><h3>D4 炉霍 → 甘孜 <span class="risk mid">中</span></h3><p>可安排卡萨湖或县城慢游，不追求一天塞多个打卡点。</p><a class="nav" target="_blank" href="https://uri.amap.com/navigation?from=100.676014,31.390657&to=99.991683,31.622731&mode=car&policy=1">打开高德路线</a></article>
+        <article class="day good"><h3>D5 甘孜慢游日 <span class="risk low">低</span></h3><p>留作天气、身体和车辆缓冲；也可以安排格萨尔王城、卡萨湖等近郊点。</p></article>
+        <article class="day"><h3>D6 甘孜 → 道孚 <span class="risk mid">中</span></h3><p>从甘孜腹地向东回撤，住道孚，避免直接切回新都桥主流车流。</p><a class="nav" target="_blank" href="https://uri.amap.com/navigation?from=99.991683,31.622731&to=101.125157,30.979486&mode=car&policy=1">打开高德路线</a></article>
+        <article class="day critical"><h3>D7 道孚 → 玉科/党岭 <span class="risk high">高</span></h3><p>低人流但道路、信号和救援条件下降。只在天气稳定、车辆状态良好时走，尽量白天抵达。</p><a class="nav" target="_blank" href="https://uri.amap.com/navigation?from=101.125157,30.979486&to=101.407041,31.071557&mode=car&policy=1">打开高德路线</a></article>
+        <article class="day"><h3>D8 党岭 → 丹巴 <span class="risk mid">中</span></h3><p>住丹巴，不再临时叠加墨石、鱼子西等热门支线；党岭支线按当地开放情况调整。</p><a class="nav" target="_blank" href="https://uri.amap.com/navigation?from=101.407041,31.071557&to=101.890540,30.878618&mode=car&policy=1">打开高德路线</a></article>
+        <article class="day"><h3>D9 丹巴 → 四姑娘山 <span class="risk mid">中高</span></h3><p>四姑娘山只安排一个核心沟，提前预约和早入园，避免把多个沟都塞进一天。</p><a class="nav" target="_blank" href="https://uri.amap.com/navigation?from=101.890540,30.878618&to=102.826018,31.094381&mode=car&policy=1">打开高德路线</a></article>
+        <article class="day critical"><h3>D10 四姑娘山 → 成都 <span class="risk high">中高</span></h3><p>不要接当天航班；如果仍在国庆返程窗口，预留至少半天以上交通缓冲。</p><a class="nav" target="_blank" href="https://uri.amap.com/navigation?from=102.826018,31.094381&to=104.066301,30.572961&mode=car&policy=1">打开高德路线</a></article>
+      </div>
+    </section>
+
+    <section>
+      <h2>为什么这条线更适合低拥堵深度游</h2>
+      <div class="two">
+        <div class="card"><b>把高峰日放到腹地</b><br>国庆前几天不急着冲折多山、新都桥和稻城亚丁，先走阿坝北线和甘孜县城，降低与主流旅行团同向的概率。</div>
+        <div class="card"><b>用“慢游日”吸收延误</b><br>D5 不安排硬转场，遇到天气、车辆、身体或临时管制时，可以调整而不破坏整条路线。</div>
+        <div class="card"><b>热门点只留一两个</b><br>四姑娘山保留一个核心沟，党岭/玉科作为深度体验，舍弃墨石、鱼子西、塔公的集中打卡。</div>
+        <div class="card warn"><b>低拥堵不等于低风险</b><br>党岭、玉科、甘孜腹地车少，但补给、信号、维修和医疗更弱。小众路线必须以白天驾驶、天气稳定和车辆可靠为前提。</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>必须遵守的三个条件</h2>
+      <table>
+        <thead><tr><th>条件</th><th>建议</th></tr></thead>
+        <tbody>
+          <tr><td>日期</td><td>最好 9/29—10/8 或 10/8 后再出发；若只能 10/1—10/7，不能承诺低堵。</td></tr>
+          <tr><td>驾驶</td><td>至少两名能轮换的驾驶员；不夜驾、不疲劳赶路，山路不强行超车。</td></tr>
+          <tr><td>应急</td><td>离线地图、充足燃油/电量、保暖雨具、车辆工具、可取消住宿，以及每天的撤退方案。</td></tr>
+        </tbody>
+      </table>
+      <p class="map-note">这是一版“低拥堵优先”的基线路线，不是固定导航轨迹。出发前 1—3 天应根据甘孜交警、四川路况、景区公告和高德实时路况复核；遇雨雪、落石、临时管制时，优先取消小众支线。</p>
+    </section>
+
+    <footer>路线图生成：基于高德地理编码节点与已读取的小红书国庆川西实测反馈。路线距离和耗时会受国庆流量、天气、道路管制和景区预约影响。</footer>
+  </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script>
+    const points = [
+      {name:'成都', day:'起点', gcj:[104.066301,30.572961]},
+      {name:'理县', day:'D1', gcj:[103.163284,31.435831]},
+      {name:'马尔康', day:'D2', gcj:[102.206386,31.905799]},
+      {name:'炉霍', day:'D3', gcj:[100.676014,31.390657]},
+      {name:'甘孜', day:'D4-D5', gcj:[99.991683,31.622731]},
+      {name:'道孚', day:'D6', gcj:[101.125157,30.979486]},
+      {name:'玉科/党岭', day:'D7', gcj:[101.407041,31.071557]},
+      {name:'丹巴', day:'D8', gcj:[101.890540,30.878618]},
+      {name:'四姑娘山', day:'D9', gcj:[102.826018,31.094381]},
+      {name:'成都', day:'D10', gcj:[104.066301,30.572961]}
+    ];
+    function outOfChina(lon, lat) { return lon < 72.004 || lon > 137.8347 || lat < 0.8293 || lat > 55.8271; }
+    function transformLat(x, y) { let r = -100 + 2*x + 3*y + 0.2*y*y + 0.1*x*y + 0.2*Math.sqrt(Math.abs(x)); r += (20*Math.sin(6*x*Math.PI)+20*Math.sin(2*x*Math.PI))*2/3; r += (20*Math.sin(y*Math.PI)+40*Math.sin(y/3*Math.PI))*2/3; r += (160*Math.sin(y/12*Math.PI)+320*Math.sin(y*Math.PI/30))*2/3; return r; }
+    function transformLon(x, y) { let r = 300 + x + 2*y + 0.1*x*x + 0.1*x*y + 0.1*Math.sqrt(Math.abs(x)); r += (20*Math.sin(6*x*Math.PI)+20*Math.sin(2*x*Math.PI))*2/3; r += (20*Math.sin(x*Math.PI)+40*Math.sin(x/3*Math.PI))*2/3; r += (150*Math.sin(x/12*Math.PI)+300*Math.sin(x/30*Math.PI))*2/3; return r; }
+    function gcj02ToWgs84(lon, lat) { if (outOfChina(lon, lat)) return [lat, lon]; const a=6378245.0, ee=0.00669342162296594323; let dLat=transformLat(lon-105,lat-35), dLon=transformLon(lon-105,lat-35); const radLat=lat/180*Math.PI, magic=1-ee*Math.sin(radLat)*Math.sin(radLat), sqrtMagic=Math.sqrt(magic); dLat=(dLat*180)/((a*(1-ee))/(magic*sqrtMagic)*Math.PI); dLon=(dLon*180)/(a/sqrtMagic*Math.cos(radLat)*Math.PI); return [lat-dLat, lon-dLon]; }
+    function initMap() {
+      const mapEl = document.getElementById('map');
+      if (!window.L) { mapEl.innerHTML = '<div style="padding:24px;color:#667583">交互地图组件未加载。上方路线示意图和下方高德导航链接仍可使用。</div>'; return; }
+      const latLngs = points.map(p => gcj02ToWgs84(p.gcj[0], p.gcj[1]));
+      const map = L.map('map', {scrollWheelZoom:false}).setView([31.1,102.1], 7);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:18, attribution:'© OpenStreetMap contributors'}).addTo(map);
+      L.polyline(latLngs, {color:'#b54536', weight:4, dashArray:'10 8'}).addTo(map);
+      points.forEach((p, i) => { const marker=L.circleMarker(latLngs[i], {radius:8, color:'#b54536', fillColor:'#fff', fillOpacity:1, weight:3}).addTo(map); marker.bindPopup('<b>'+p.name+'</b><br>'+p.day); });
+      map.fitBounds(L.latLngBounds(latLngs), {padding:[24,24]});
+    }
+    window.addEventListener('load', initMap);
+  </script>
+</body>
+</html>

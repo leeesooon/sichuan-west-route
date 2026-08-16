@@ -1,0 +1,5 @@
+.playwright-cli/
+*.tmp
+*.log
+Thumbs.db
+Desktop.ini
