@@ -69,8 +69,8 @@
     .route-summary-item b { display:block; color:var(--muted); font-size:11px; }
     .route-summary-item strong { display:block; margin:2px 0 1px; color:var(--navy); font-size:20px; }
     .route-summary-item span { color:var(--muted); font-size:11px; }
-    .gallery { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
-    .gallery figure { margin:0; border:1px solid var(--line); border-radius:7px; background:#fff; overflow:hidden; transition:transform .18s ease, box-shadow .18s ease; }
+    .gallery { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; align-items:start; }
+    .gallery figure { align-self:start; margin:0; border:1px solid var(--line); border-radius:7px; background:#fff; overflow:hidden; transition:transform .18s ease, box-shadow .18s ease; }
     .gallery figure:hover { transform:translateY(-3px); box-shadow:0 9px 18px rgba(28,71,78,.12); }
     .gallery img { display:block; width:100%; height:170px; object-fit:cover; background:#e9f0f4; }
     .gallery figcaption { padding:11px 12px; font-size:13px; line-height:1.55; }
@@ -84,13 +84,15 @@
     .photo-group h4 { margin:0; color:var(--navy); font-size:17px; }
     .photo-group-head p { margin:3px 0 0; color:var(--muted); font-size:12px; }
     .photo-group-tag { flex:0 0 auto; padding:4px 9px; border-radius:999px; background:#e3f2ef; color:#26766d; font-size:11px; font-weight:700; }
-    .photo-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:11px; }
-    .photo-card { min-width:0; }
+    .photo-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; margin-top:11px; }
+    .photo-card { min-width:0; grid-column:span 2; }
+    .photo-card:nth-child(4), .photo-card:nth-child(5) { grid-column:span 3; }
     .photo-card .photo-frame { display:flex; align-items:center; justify-content:center; aspect-ratio:3 / 4; overflow:hidden; background:#dce9e8; }
     .photo-card.wide .photo-frame { aspect-ratio:4 / 3; }
     .photo-card img { width:100%; height:100%; object-fit:contain; background:#dce9e8; }
     .photo-card.wide img { object-fit:cover; }
-    .photo-link { position:relative; display:block; width:100%; height:100%; text-decoration:none; }
+    .photo-link { position:relative; display:block; text-decoration:none; }
+    .photo-frame .photo-link { width:100%; height:100%; }
     .photo-link::after { content:"打开大图 ↗"; position:absolute; right:7px; bottom:7px; padding:3px 7px; border-radius:999px; background:rgba(18,52,82,.78); color:white; font-size:10px; opacity:0; transition:opacity .18s ease; }
     .photo-link:hover::after, .photo-link:focus-visible::after { opacity:1; }
     .photo-link:hover img { filter:saturate(1.08) brightness(1.04); }
@@ -104,8 +106,8 @@
     ul { margin:7px 0 0 18px; padding:0; }
     li { margin:4px 0; }
     footer { color:var(--muted); font-size:12px; padding:4px 0 20px; }
-    @media (max-width:1100px) { .photo-grid { grid-template-columns:repeat(3,1fr); } }
-    @media (max-width:900px) { .gallery { grid-template-columns:repeat(2,1fr); } .photo-grid { grid-template-columns:repeat(2,1fr); } .route-summary { grid-template-columns:repeat(2,1fr); } }
+    @media (max-width:1100px) { .photo-grid { grid-template-columns:repeat(6,1fr); } }
+    @media (max-width:900px) { .gallery { grid-template-columns:repeat(2,1fr); } .photo-grid { grid-template-columns:repeat(2,1fr); } .photo-card, .photo-card:nth-child(4), .photo-card:nth-child(5) { grid-column:auto; } .route-summary { grid-template-columns:repeat(2,1fr); } }
     @media (max-width:760px) { .shell { padding:12px; } header { padding:22px 20px; } header h1 { font-size:25px; } .stats, .day-grid, .two, .gallery, .route-summary { grid-template-columns:1fr; } .photo-grid { grid-template-columns:repeat(2,1fr); } .photo-group-head { display:block; } .photo-group-tag { display:inline-block; margin-top:8px; } section { padding:14px; } #map { height:380px; } }
     @media print { body { background:white; } .shell { max-width:none; padding:0; } #map { display:none; } }
   </style>
@@ -198,13 +200,13 @@
           </div>
         </div>
         <div class="photo-group" data-source="https://www.xiaohongshu.com/explore/6a55a479000000001503f9cc">
-          <div class="photo-group-head"><div><h4>丹巴 · 中路藏寨</h4><p>白墙红窗、古碉、山坡村落；偏人文和慢游</p></div><span class="photo-group-tag">藏寨 + 人文</span></div>
+          <div class="photo-group-head"><div><h4>丹巴 · 藏寨 / 古碉 / 河谷</h4><p>把院落、古碉、田园和山地拆开看，避免连续同类建筑画面</p></div><span class="photo-group-tag">藏寨 + 古碉</span></div>
           <div class="photo-grid">
-            <figure class="photo-card"><div class="photo-frame"><img src="route-assets/xhs-replace-06.webp" alt="丹巴中路藏寨实拍 01"></div><figcaption><b>中路藏寨 · 山坡村落</b>村寨散落在山坡上，适合住一晚，清晨和傍晚看层次。</figcaption></figure>
-            <figure class="photo-card wide"><div class="photo-frame"><img src="route-assets/xhs-replace-07.webp" alt="丹巴中路藏寨实拍 02"></div><figcaption><b>中路藏寨 · 河谷视野</b>横向景别更适合看村寨和河谷的关系，避开甲居人潮的替代选项。</figcaption></figure>
-            <figure class="photo-card"><div class="photo-frame"><img src="route-assets/xhs-replace-08.webp" alt="丹巴中路藏寨实拍 03"></div><figcaption><b>中路藏寨 · 古碉与田地</b>适合建筑摄影和村落漫步，活动半径不必拉得太大。</figcaption></figure>
-            <figure class="photo-card wide"><div class="photo-frame"><img src="route-assets/xhs-replace-09.webp" alt="丹巴中路藏寨实拍 04"></div><figcaption><b>丹巴 · 云雾山谷</b>阴天也有味道，低云和古碉会让画面更安静；不必追求晴天滤镜。</figcaption></figure>
-            <figure class="photo-card"><div class="photo-frame"><img src="route-assets/xhs-replace-10.webp" alt="丹巴中路藏寨实拍 05"></div><figcaption><b>中路藏寨 · 生活感</b>这里的价值是村落日常，不是连续打卡；把时间留给散步和吃饭。</figcaption></figure>
+            <figure class="photo-card"><div class="photo-frame"><img src="route-assets/xhs-replace-06.webp" alt="丹巴中路藏寨院落实拍"></div><figcaption><b>中路藏寨 · 生活院落</b>村寨散落在山坡上，适合住一晚，清晨和傍晚看层次。</figcaption></figure>
+            <figure class="photo-card wide" data-source="https://commons.wikimedia.org/wiki/File:Danba,_Garze,_Sichuan,_China_-_panoramio.jpg"><div class="photo-frame"><img src="route-assets/danba-commons-01.jpg" alt="Wikimedia Commons 丹巴河谷实拍"></div><figcaption><b>丹巴河谷 · 远景</b>用更大的景别看村寨和山谷的关系，和院落近景形成对比。</figcaption></figure>
+            <figure class="photo-card wide" data-source="https://commons.wikimedia.org/wiki/File:Danba,_Sichuan.jpg"><div class="photo-frame"><img src="route-assets/danba-commons-02.jpg" alt="Wikimedia Commons 丹巴田园实拍"></div><figcaption><b>丹巴 · 田园与山地</b>把村落、农田和山体一起看，适合判断区域整体气质。</figcaption></figure>
+            <figure class="photo-card wide" data-source="https://commons.wikimedia.org/wiki/File:Danba_diaolou.jpg"><div class="photo-frame"><img src="route-assets/danba-diaolou-wikimedia.jpg" alt="Wikimedia Commons 丹巴古碉实拍"></div><figcaption><b>丹巴古碉 · 建筑人文</b>丹巴不只有藏寨风景，古碉本身就是值得停留的人文主题。</figcaption></figure>
+            <figure class="photo-card wide" data-source="https://www.xiaohongshu.com/explore/6a55a479000000001503f9cc" data-source-label="查看相关路线笔记"><div class="photo-frame"><img src="route-assets/dangba-route-03.webp" alt="丹巴党岭方向河谷实拍"></div><figcaption><b>党岭 / 丹巴 · 河谷道路</b>把山路、河谷和村寨放在一起判断，不要只按单张院落照片规划。</figcaption></figure>
           </div>
         </div>
         <div class="photo-group" data-source="https://www.xiaohongshu.com/explore/6a32b4f1000000001603fbb6">
