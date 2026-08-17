@@ -29,6 +29,7 @@
     .legend { display:flex; flex-wrap:wrap; gap:12px; margin:10px 0 6px; }
     .legend span { display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--muted); }
     .legend i { width:22px; height:5px; border-radius:3px; }
+    .legend i.dash-key { height:0; border-top:3px dashed var(--navy); border-radius:0; }
     .route-picker { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 14px; }
     .route-chip { display:inline-flex; align-items:center; gap:7px; padding:7px 13px; border:1px solid #c5dfe0; border-radius:999px; background:#f1f8f7; color:var(--ink); cursor:pointer; font:inherit; font-size:13px; font-weight:700; transition:background .15s ease,border-color .15s ease; }
     .route-chip:hover { background:#dff0ee; }
@@ -102,13 +103,14 @@
 
     <section>
       <h2>一、国庆塞车分析（地图渲染）</h2>
-      <p>地图按<b>标准途经节点</b>重绘：小环线补齐卧龙、小金、八美、塔公、折多山垭口；大环线补齐观音桥、翁达、色达、马尼干戈、新路海、白玉、桑堆；甘孜-道孚按实际走法经炉霍接入。颜色代表国庆典型拥堵等级，<b>点击下方环线按钮，地图会高亮该线路并展开逐段分析</b>。</p>
+       <p>地图按公开路线笔记的<b>全部途经节点</b>重绘，颜色代表各相邻节点之间的国庆典型交通等级。总览会同时显示六条线路的所有点位与交通分段；<b>点击下方线路按钮，地图会按逐段交通状态高亮，并用虚线边界标出当前线路</b>。</p>
       <div class="legend">
         <span><i style="background:#c0392b"></i>严重拥堵</span>
         <span><i style="background:#e97860"></i>间歇拥堵</span>
-        <span><i style="background:#e0a52f"></i>缓行</span>
-        <span><i style="background:#2f8b72"></i>基本通畅</span>
-        <span><i style="background:#123452;height:10px;width:10px;border-radius:50%"></i>枢纽节点</span>
+         <span><i style="background:#e0a52f"></i>缓行</span>
+         <span><i style="background:#2f8b72"></i>基本通畅</span>
+         <span><i style="background:#123452;height:10px;width:10px;border-radius:50%"></i>枢纽节点</span>
+         <span><i class="dash-key"></i>当前线路虚线边界</span>
       </div>
       <div class="route-picker" id="route-picker"></div>
       <div id="map"></div>
@@ -234,19 +236,87 @@
       {id:'note-daocheng',kind:'组合往返线',name:'4 · 稻城环线',color:'#7c3aed',days:'5–6 天',dist:'约 1,500–1,800 km',alt:'稻城亚丁 4,000m+',score:'7.8',scoreCls:'s3',chain:['成都','都江堰','四姑娘山','丹巴','八美','墨石公园','塔公草原','鱼子西','雅江','理塘','稻城亚丁','理塘','格底拉姆','红海子','木格措','康定','泸定','雅安','成都'],segs:['s1','s12','s13','s15','s11'],spots:['稻城亚丁：仙乃日、牛奶海、五色海','理塘：高原城镇与毛垭草原','格底拉姆：雪山远景','红海子、木格措','鱼子西：日落机位'],risks:['亚丁是往返/组合返程，不是严格闭环','高反和徒步强度最高','门票、观光车、住宿需要提前锁定'],verdict:'笔记中的核心是亚丁雪山湖泊，外圈用丹巴、塔公、新都桥补景。若只剩 5 天，必须减少小点，不要把亚丁、鱼子西、木格措全部安排成硬性打卡。'},
       {id:'note-genie',kind:'越野环线',name:'5 · 格聂南线',color:'#e97860',days:'5–6 天',dist:'约 500–700 km',alt:'扎瓦拉垭口约 4,980m',score:'8.4',scoreCls:'s2',chain:['理塘','毛垭大草原','姊妹湖','巴塘','扎瓦拉垭口','劳者龙巴垭口','格聂神山','格聂之眼','下则通村','冷古寺','则巴村','理塘'],segs:['s14','s15'],spots:['格聂神山','格聂之眼','姊妹湖','毛垭大草原','冷古寺、则巴村'],risks:['非铺装、窄路、无信号路段多','扎瓦拉垭口约 4,980m，天气决定能否通过','普通轿车和雨季不建议冒险','属于越野/深度线，不能用小环线节奏套用'],verdict:'笔记里的小众越野线路，景色原始、人少，但驾驶门槛最高。它更适合作为单独 5–6 天游线，不应和亚丁或大环线强行拼接。'},
       {id:'note-jiuzhai',kind:'闭环',name:'6 · 九寨沟环线',color:'#0f9fa5',days:'4–5 天',dist:'约 1,100–1,400 km',alt:'整体低于甘孜深线',score:'8.7',scoreCls:'s1',chain:['成都','都江堰','四姑娘山','理小路','毕棚沟','黑水','达古冰川','月亮湖','若尔盖大草原','若尔盖花湖','九寨沟','川主寺','黄龙','松潘','茂县','汶川','都江堰','成都'],segs:['s1','s2'],spots:['四姑娘山、理小路','毕棚沟、达古冰川','若尔盖大草原、花湖','九寨沟、黄龙','月亮湖、川主寺'],risks:['九寨沟/黄龙预约和限流是第一风险','都汶高速、九红草原大道节假日车多','行程景点密度大，不宜每天换住宿'],verdict:'笔记中的水景和草原闭环，整体海拔与高反压力比甘孜深线友好，适合老人小孩。国庆重点不是能不能到，而是门票预约和景区排队。'}
+     ];
+    const NOTE_TRAFFIC=[
+      {nodes:['成都','都江堰'],level:'moderate',name:'成都—都江堰进山口',desc:'节假日西出城车流集中，早上出城、返程日回城最容易出现排队。'},
+      {nodes:['都江堰','四姑娘山'],level:'moderate',name:'都江堰—四姑娘山接入段',desc:'都汶方向与 G350 汇流，热门线路叠加后观景点和隧道口容易缓行。'},
+      {nodes:['四姑娘山','丹巴'],level:'mild',name:'四姑娘山—丹巴峡谷段',desc:'盘山峡谷路段车速较慢，景区出口和会车点有短时缓行。'},
+      {nodes:['丹巴','八美'],level:'mild',name:'丹巴—八美山路段',desc:'整体车流中等，弯道和村镇穿行需要控制车速。'},
+      {nodes:['八美','墨石公园'],level:'mild',name:'八美—墨石公园景区段',desc:'景区停车和短途接驳会造成排队，早到比绕路更有效。'},
+      {nodes:['墨石公园','塔公草原'],level:'mild',name:'墨石公园—塔公草原',desc:'热门观景带车流集中，停车带和岔口容易出现间歇缓行。'},
+      {nodes:['塔公草原','姑弄村'],level:'clear',name:'塔公草原—姑弄村',desc:'乡道车流较少，主要注意牧区牲畜和临时停车。'},
+      {nodes:['姑弄村','新都桥'],level:'mild',name:'姑弄村—新都桥',desc:'新都桥周边观景车流增加，日落时段停车和汇流较慢。'},
+      {nodes:['新都桥','鱼子西'],level:'mild',name:'新都桥—鱼子西机位段',desc:'短途上山路在日落前车流集中，错峰进入更稳妥。'},
+      {nodes:['鱼子西','雅拉雪山'],level:'clear',name:'鱼子西—雅拉雪山景区段',desc:'以景区连接道路为主，车流不大，天气和路面状况更关键。'},
+      {nodes:['雅拉雪山','红海子'],level:'clear',name:'雅拉雪山—红海子',desc:'支线通行较顺，注意高海拔天气变化与临崖路段。'},
+      {nodes:['红海子','木格措'],level:'mild',name:'红海子—木格措景区带',desc:'景区入口和停车场在假期有短时排队，主路通常可通行。'},
+      {nodes:['木格措','康定'],level:'mild',name:'木格措—康定',desc:'康定城区入口车流上升，午后和晚间更容易缓行。'},
+      {nodes:['康定','泸定'],level:'severe',name:'康定—泸定雅康通道',desc:'节假日主通道车流大，折多山、隧道和收费站可能形成长距离拥堵。'},
+      {nodes:['泸定','雅安'],level:'severe',name:'泸定—雅安返城通道',desc:'返程车流与高速汇流叠加，10/5–10/6 全天都应预留缓冲。'},
+      {nodes:['雅安','成都'],level:'severe',name:'雅安—成都返城通道',desc:'国庆回城主通道，尾日不建议叠加景点或固定航班。'},
+      {nodes:['丹巴','雅拉雪山'],level:'mild',name:'丹巴—雅拉雪山连接段',desc:'山路车流中等，热门机位和村镇出口会出现短暂停车。'},
+      {nodes:['雅拉雪山','色达'],level:'clear',name:'雅拉雪山—色达远线段',desc:'长距离高原道路整体车少，补给和天气窗口比拥堵更需要关注。'},
+      {nodes:['色达','道孚节点'],level:'mild',name:'色达—道孚',desc:'色达出入口和旅游车队会带来间歇缓行，远离城区后恢复通畅。'},
+      {nodes:['道孚节点','墨石公园'],level:'clear',name:'道孚—墨石公园',desc:'车流较少，乡道弯多，按白天通过和低速会车规划。'},
+      {nodes:['塔公草原','鱼子西'],level:'mild',name:'塔公草原—鱼子西',desc:'观景点密集，日落前后车辆集中进入机位，停车秩序决定通行速度。'},
+      {nodes:['鱼子西','格底拉姆'],level:'mild',name:'鱼子西—格底拉姆',desc:'高海拔观景支线车流阶段性集中，雨雪天气不宜强行上山。'},
+      {nodes:['格底拉姆','红海子'],level:'mild',name:'格底拉姆—红海子',desc:'支线道路整体可通，热门机位附近存在短时排队。'},
+      {nodes:['四姑娘山','金川'],level:'mild',name:'四姑娘山—金川',desc:'峡谷与盘山路段车速偏慢，假期车流中等。'},
+      {nodes:['丹巴','金川'],level:'mild',name:'丹巴—金川',desc:'峡谷和村镇路段车速偏慢，假期车流中等，注意会车。'},
+      {nodes:['金川','色达'],level:'clear',name:'金川—色达高原段',desc:'长转场车流较少，补给距离和高原天气是主要变量。'},
+      {nodes:['色达','甘孜'],level:'mild',name:'色达—甘孜',desc:'城镇出入口有阶段性车流，整体比 318 主线顺畅。'},
+      {nodes:['甘孜','新龙'],level:'clear',name:'甘孜—新龙',desc:'远线车流稀疏，弯多、补给间隔长，建议白天行车。'},
+      {nodes:['新龙','理塘'],level:'mild',name:'新龙—理塘',desc:'高原长转场，车流不大但天气和施工点可能造成短时缓行。'},
+      {nodes:['理塘','稻城亚丁'],level:'moderate',name:'理塘—稻城亚丁通道',desc:'景区方向车流和观光车排队集中，亚丁入口假期常出现长等待。'},
+      {nodes:['理塘','格底拉姆'],level:'mild',name:'理塘—格底拉姆',desc:'高原观景支线车流中等，垭口天气变化快，需留出掉头时间。'},
+      {nodes:['格底拉姆','墨石公园'],level:'clear',name:'格底拉姆—墨石公园',desc:'观景支线之间的连接道路车流较少，按白天通过。'},
+      {nodes:['鱼子西','红海子'],level:'mild',name:'鱼子西—红海子',desc:'多个观景点连续进入，假期停车和短途汇流会放慢速度。'},
+      {nodes:['鱼子西','雅江'],level:'mild',name:'鱼子西—雅江',desc:'从观景支线回到主路后通行恢复，雅江城区入口可能缓行。'},
+      {nodes:['雅江','理塘'],level:'moderate',name:'雅江—理塘 318 中段',desc:'节假日车流明显增加，隧道口、服务区和理塘城区容易缓行。'},
+      {nodes:['理塘','毛垭大草原'],level:'clear',name:'理塘—毛垭大草原',desc:'草原开阔、车流少，主要注意牦牛横穿和强风。'},
+      {nodes:['毛垭大草原','姊妹湖'],level:'clear',name:'毛垭大草原—姊妹湖',desc:'深线道路车流少，天气和路面状态比拥堵更关键。'},
+      {nodes:['姊妹湖','巴塘'],level:'mild',name:'姊妹湖—巴塘',desc:'景点停车和峡谷会车会造成短时缓行，整体通行可控。'},
+      {nodes:['巴塘','扎瓦拉垭口'],level:'clear',name:'巴塘—扎瓦拉垭口越野段',desc:'非铺装与高海拔路段车流很少，通行时间受天气和车辆能力影响。'},
+      {nodes:['扎瓦拉垭口','劳者龙巴垭口'],level:'clear',name:'扎瓦拉—劳者龙巴垭口',desc:'连续垭口越野段无常态拥堵，雨雪天应优先撤退。'},
+      {nodes:['劳者龙巴垭口','格聂神山'],level:'clear',name:'劳者龙巴垭口—格聂神山',desc:'原始路段车流稀少，无信号，需按车队行驶。'},
+      {nodes:['格聂神山','格聂之眼'],level:'clear',name:'格聂神山—格聂之眼',desc:'短途越野连接段，路况变化和停车位置比拥堵更重要。'},
+      {nodes:['格聂之眼','下则通村'],level:'clear',name:'格聂之眼—下则通村',desc:'深线车流很少，注意涉水、落石与临崖会车。'},
+      {nodes:['下则通村','冷古寺'],level:'clear',name:'下则通村—冷古寺',desc:'无信号和非铺装路段，按车队间距控制，不存在稳定的拥堵规律。'},
+      {nodes:['冷古寺','则巴村'],level:'clear',name:'冷古寺—则巴村',desc:'深线道路车流稀少，天气恶化时不要为赶路强行通过。'},
+      {nodes:['则巴村','理塘'],level:'mild',name:'则巴村—理塘返程段',desc:'回到理塘方向后车流略有增加，进城和补给点可能短时缓行。'},
+      {nodes:['四姑娘山','理小路'],level:'mild',name:'四姑娘山—理小路',desc:'景区出入口与隧道群假期车流上升，整体比都汶主通道更可控。'},
+      {nodes:['理小路','毕棚沟'],level:'mild',name:'理小路—毕棚沟',desc:'景区停车和摆渡接驳带来短时排队，错峰入园更有效。'},
+      {nodes:['毕棚沟','黑水'],level:'mild',name:'毕棚沟—黑水',desc:'彩林和冰川景点带来中等车流，山路通行总体稳定。'},
+      {nodes:['黑水','达古冰川'],level:'moderate',name:'黑水—达古冰川',desc:'景区入口和摆渡车在假期容易排队，需把游览时间和交通时间分开估算。'},
+      {nodes:['达古冰川','月亮湖'],level:'clear',name:'达古冰川—月亮湖',desc:'草原转场车流较少，注意长距离驾驶和补给间隔。'},
+      {nodes:['月亮湖','若尔盖大草原'],level:'clear',name:'月亮湖—若尔盖大草原',desc:'开阔草原段整体通畅，牧区牲畜和临时停车是主要干扰。'},
+      {nodes:['若尔盖大草原','若尔盖花湖'],level:'moderate',name:'若尔盖大草原—花湖',desc:'花湖景区方向节假日车流集中，入口和停车场容易排队。'},
+      {nodes:['若尔盖花湖','九寨沟'],level:'moderate',name:'花湖—九寨沟长转场',desc:'跨区域长转场，景区前后车流增加，需给九寨沟预约时段留出余量。'},
+      {nodes:['九寨沟','川主寺'],level:'moderate',name:'九寨沟—川主寺',desc:'九红草原大道旅游车流明显，景区出口和镇区容易缓行。'},
+      {nodes:['川主寺','黄龙'],level:'moderate',name:'川主寺—黄龙景区段',desc:'黄龙预约、索道和停车接驳会形成阶段性排队。'},
+      {nodes:['黄龙','松潘'],level:'mild',name:'黄龙—松潘',desc:'景区离开后车流回落，山区弯道与旅游大巴会影响速度。'},
+      {nodes:['松潘','茂县'],level:'mild',name:'松潘—茂县',desc:'国道车流中等，城镇入口和施工点可能短时缓行。'},
+      {nodes:['茂县','汶川'],level:'moderate',name:'茂县—汶川',desc:'进入都汶通道前车流逐步增加，返程时应预留汇流缓冲。'},
+      {nodes:['汶川','都江堰'],level:'moderate',name:'汶川—都江堰返城段',desc:'都汶高速返程汇流明显，尾日午后到夜间容易出现长距离缓行。'}
     ];
+    function linkKey(a,b){return [a,b].sort().join('::');}
+    function noteTrafficFor(a,b){const key=linkKey(a,b),item=NOTE_TRAFFIC.find(t=>linkKey(t.nodes[0],t.nodes[1])===key);return item||{nodes:[a,b],level:'clear',name:a+'—'+b,desc:'该段以景区或乡道通行为主，国庆通常车流较少，仍需按天气和停车秩序调整。'};}
+    function routeLinks(route){return route.chain.slice(0,-1).map((from,i)=>{const to=route.chain[i+1],traffic=noteTrafficFor(from,to);return Object.assign({key:linkKey(from,to),from,to},traffic);});}
+    function allNoteLinks(){const seen={},links=[];NOTE_ROUTES.forEach(route=>routeLinks(route).forEach(link=>{if(!seen[link.key]){seen[link.key]=1;links.push(link);}}));return links;}
+    function allNoteNodes(){const seen={};NOTE_ROUTES.forEach(route=>route.chain.forEach(name=>{seen[name]=1;}));return Object.keys(seen);}
+    function trafficRank(level){return {clear:1,mild:2,moderate:3,severe:4}[level]||1;}
     function outOfChina(lon,lat){return lon<72.004||lon>137.8347||lat<0.8293||lat>55.8271;}
     function transformLat(x,y){let r=-100+2*x+3*y+.2*y*y+.1*x*y+.2*Math.sqrt(Math.abs(x));r+=(20*Math.sin(6*x*Math.PI)+20*Math.sin(2*x*Math.PI))*2/3;r+=(20*Math.sin(y*Math.PI)+40*Math.sin(y/3*Math.PI))*2/3;r+=(160*Math.sin(y/12*Math.PI)+320*Math.sin(y*Math.PI/30))*2/3;return r;}
     function transformLon(x,y){let r=300+x+2*y+.1*x*x+.1*x*y+.1*Math.sqrt(Math.abs(x));r+=(20*Math.sin(6*x*Math.PI)+20*Math.sin(2*x*Math.PI))*2/3;r+=(20*Math.sin(x*Math.PI)+40*Math.sin(x/3*Math.PI))*2/3;r+=(150*Math.sin(x/12*Math.PI)+300*Math.sin(x/30*Math.PI))*2/3;return r;}
     function gcj02ToWgs84(lon,lat){if(outOfChina(lon,lat))return[lat,lon];const a=6378245,ee=.00669342162296594323,rad=lat/180*Math.PI;let dLat=transformLat(lon-105,lat-35),dLon=transformLon(lon-105,lat-35),magic=1-ee*Math.sin(rad)*Math.sin(rad),sqrt=Math.sqrt(magic);dLat=dLat*180/((a*(1-ee))/(magic*sqrt)*Math.PI);dLon=dLon*180/(a/sqrt*Math.cos(rad)*Math.PI);return[lat-dLat,lon-dLon];}
     function toLL(name){const g=HUBS[name];return gcj02ToWgs84(g[0],g[1]);}
     let map=null,baseLayerGroup=null,routeLayerGroup=null,hubLayerGroup=null,detailLayerGroup=null;
-    function initMap(){const el=document.getElementById('map');if(!window.L){el.innerHTML='<div style="padding:24px;color:#687b86">交互地图未加载（无网络），下方表格仍可查看拥堵分析。</div>';return;}map=L.map('map',{scrollWheelZoom:false}).setView([30.9,101.3],7);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);baseLayerGroup=L.layerGroup().addTo(map);hubLayerGroup=L.layerGroup().addTo(map);routeLayerGroup=L.layerGroup().addTo(map);detailLayerGroup=L.layerGroup().addTo(map);SEGS.forEach(seg=>{const st=LEVELS[seg.level];L.polyline(seg.nodes.map(toLL),{color:st.color,weight:st.weight,opacity:st.opacity}).addTo(baseLayerGroup).bindPopup('<b>'+seg.name+'</b><br>'+st.label+'<br>'+seg.desc);});const hubUse={};SEGS.forEach(seg=>seg.nodes.forEach(n=>hubUse[n]=(hubUse[n]||0)+1));Object.keys(hubUse).forEach(name=>{const opt={radius:hubUse[name]>2?6:4.5,color:'#123452',fillColor:'#fff',fillOpacity:1,weight:2.5};L.circleMarker(toLL(name),opt).addTo(hubLayerGroup).bindPopup('<b>'+(HUBS[name].label||name)+'</b>');});selectRoute('all');}
+    function initMap(){const el=document.getElementById('map');if(!window.L){el.innerHTML='<div style="padding:24px;color:#687b86">交互地图未加载（无网络），下方表格仍可查看拥堵分析。</div>';return;}map=L.map('map',{scrollWheelZoom:false}).setView([30.9,101.3],7);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);baseLayerGroup=L.layerGroup().addTo(map);hubLayerGroup=L.layerGroup().addTo(map);routeLayerGroup=L.layerGroup().addTo(map);detailLayerGroup=L.layerGroup().addTo(map);const links=allNoteLinks(),linkRoutes={},nodeTraffic={},nodeRoutes={};NOTE_ROUTES.forEach(route=>routeLinks(route).forEach(link=>{(linkRoutes[link.key]||(linkRoutes[link.key]=[])).push(route.name);[link.from,link.to].forEach(name=>{if(!nodeTraffic[name]||trafficRank(link.level)>trafficRank(nodeTraffic[name].level))nodeTraffic[name]=link;(nodeRoutes[name]||(nodeRoutes[name]=[])).push(route.name);});}));links.forEach(link=>{const st=LEVELS[link.level],names=[...new Set(linkRoutes[link.key]||[])];L.polyline([toLL(link.from),toLL(link.to)],{color:st.color,weight:Math.max(st.weight,4),opacity:st.opacity,baseOpacity:st.opacity,lineCap:'round',className:'overview-traffic'}).addTo(baseLayerGroup).bindPopup('<b>'+link.name+'</b><br><span class="lvl '+st.cls+'" style="background:'+st.color+';color:#fff;padding:2px 7px;border-radius:999px">'+st.label+'</span><br>'+link.desc+'<br><span style="color:#687b86">涉及：'+names.join(' / ')+'</span>');});allNoteNodes().forEach(name=>{const link=nodeTraffic[name],st=LEVELS[link?link.level:'clear'],routes=[...new Set(nodeRoutes[name]||[])],radius=6;L.circleMarker(toLL(name),{radius:radius,color:'#fff',fillColor:st.color,fillOpacity:.95,weight:2.5,className:'traffic-node'}).addTo(hubLayerGroup).bindPopup('<b>'+((HUBS[name]&&HUBS[name].label)||name)+'</b><br><span class="lvl '+st.cls+'" style="background:'+st.color+';color:#fff;padding:2px 7px;border-radius:999px">'+st.label+'</span><br><span style="color:#687b86">相邻路段按最高交通等级标注；涉及：'+routes.join(' / ')+'</span>');});selectRoute('all');}
     function clearHighlight(){routeLayerGroup.clearLayers();detailLayerGroup.clearLayers();}
-    function highlightRoute(route){clearHighlight();baseLayerGroup&&baseLayerGroup.eachLayer(layer=>layer.setStyle&&layer.setStyle({opacity:.16}));const latlngs=route.chain.map(toLL);L.polyline(latlngs,{color:'#fff',weight:10,opacity:.9}).addTo(routeLayerGroup);L.polyline(latlngs,{color:route.color,weight:5,opacity:1}).addTo(routeLayerGroup);let seq=0,seen={};route.chain.forEach(name=>{if(seen[name])return;seen[name]=1;seq++;L.circleMarker(toLL(name),{radius:9,color:route.color,fillColor:'#fff',fillOpacity:1,weight:3}).addTo(detailLayerGroup).bindTooltip(String(seq),{permanent:true,direction:'center',className:'seq-tip'}).bindPopup('<b>'+String(seq)+'. '+(HUBS[name].label||name)+'</b><br>'+route.name);});map.fitBounds(L.latLngBounds(latlngs),{padding:[30,30]});}
-    function renderOverview(){const box=document.getElementById('route-detail');box.innerHTML='<div class="rd-head"><h4>笔记六条线路概览</h4><span class="rd-tag">按来源图重绘</span></div><p class="note">选择器只显示笔记中的六条线：小环线、色达环线、川西大环线、稻城环线、格聂南线、九寨沟环线。详情里同时标注闭环、组合线和越野线，避免名称相同而走法不同。</p><div class="rd-stats"><div class="rd-stat"><b>经典闭环</b><strong>小环 / 色达 / 九寨沟</strong></div><div class="rd-stat"><b>组合大环</b><strong>川西大环线</strong></div><div class="rd-stat"><b>组合往返</b><strong>稻城环线</strong></div><div class="rd-stat"><b>越野环线</b><strong>格聂南线</strong></div><div class="rd-stat"><b>来源笔记</b><strong>6 条热门线</strong></div></div>';}
-    function renderDetail(route){const box=document.getElementById('route-detail');const chainHtml=route.chain.map((n,i)=>'<b>'+(i+1)+'</b>'+(HUBS[n].label||n)).join(' → ');const segsHtml=route.segs.map(id=>{const seg=SEGS.find(s=>s.id===id);if(!seg)return'';const st=LEVELS[seg.level];return '<div class="rd-seg"><i style="background:'+st.color+'"></i><span class="lvl '+st.cls+'" style="background:'+st.color+'">'+st.label+'</span><div><b>'+seg.name+'</b><span class="desc">'+seg.desc+'</span></div></div>';}).join('');box.innerHTML='<div class="rd-head"><h4>'+route.name+'</h4><span class="rd-tag">'+route.kind+'</span><span class="rd-tag">推荐 '+route.score+' / 10</span></div><div class="rd-stats"><div class="rd-stat"><b>线路形态</b><strong>'+route.kind+'</strong></div><div class="rd-stat"><b>建议周期</b><strong>'+route.days+'</strong></div><div class="rd-stat"><b>参考里程</b><strong>'+route.dist+'</strong></div><div class="rd-stat"><b>最高海拔</b><strong>'+route.alt+'</strong></div><div class="rd-stat"><b>总评</b><strong><span class="grade '+route.scoreCls+'">'+route.score+'</span></strong></div></div><div class="rd-chain"><b>途经顺序</b>'+chainHtml+'</div><div class="rd-cols"><div class="rd-box"><b class="title">核心景点</b><ul>'+route.spots.map(s=>'<li>'+s+'</li>').join('')+'</ul></div><div class="rd-box"><b class="title">主要风险</b><ul>'+route.risks.map(r=>'<li>'+r+'</li>').join('')+'</ul></div></div><div class="rd-segs"><b style="color:var(--navy)">逐段拥堵分析</b>'+segsHtml+'</div><div class="rd-verdict"><span class="grade '+route.scoreCls+'">'+route.score+'</span><b>'+route.name+'点评：</b>'+route.verdict+'</div>';}
-    function selectRoute(id){document.querySelectorAll('.route-chip').forEach(c=>c.classList.toggle('active',c.dataset.route===id));if(id==='all'){clearHighlight();baseLayerGroup&&baseLayerGroup.eachLayer(layer=>layer.setStyle&&layer.setStyle({opacity:LEVELS[SEGS.find(s=>layer.getPopup()&&layer.getPopup().getContent().includes(s.name))?.level||'clear'].opacity}));map&&map.setView([30.9,101.3],7);renderOverview();try{history.replaceState(null,'','#routes-overview');}catch(e){}return;}const route=NOTE_ROUTES.find(r=>r.id===id);if(!route)return;highlightRoute(route);renderDetail(route);try{history.replaceState(null,'','#route-'+id);}catch(e){}}
+    function highlightRoute(route){clearHighlight();baseLayerGroup&&baseLayerGroup.eachLayer(layer=>layer.setStyle&&layer.setStyle({opacity:.16}));hubLayerGroup&&hubLayerGroup.eachLayer(layer=>layer.setStyle&&layer.setStyle({opacity:.24,fillOpacity:.2}));const links=routeLinks(route);links.forEach(link=>{const st=LEVELS[link.level],coords=[toLL(link.from),toLL(link.to)];L.polyline(coords,{color:'#fff',weight:14,opacity:.95,lineCap:'round',lineJoin:'round',className:'route-outline'}).addTo(routeLayerGroup);L.polyline(coords,{color:route.color,weight:11,opacity:.95,dashArray:'10 8',lineCap:'butt',lineJoin:'round',className:'route-boundary'}).addTo(routeLayerGroup);L.polyline(coords,{color:st.color,weight:6,opacity:1,lineCap:'round',lineJoin:'round',className:'route-traffic'}).addTo(routeLayerGroup).bindPopup('<b>'+link.name+'</b><br><span class="lvl '+st.cls+'" style="background:'+st.color+';color:#fff;padding:2px 7px;border-radius:999px">'+st.label+'</span><br>'+link.desc);});const nodeTraffic={};links.forEach(link=>{[link.from,link.to].forEach(name=>{if(!nodeTraffic[name]||trafficRank(link.level)>trafficRank(nodeTraffic[name].level))nodeTraffic[name]=link;});});let seq=0,seen={};route.chain.forEach(name=>{if(seen[name])return;seen[name]=1;seq++;const link=nodeTraffic[name],st=LEVELS[link?link.level:'clear'];L.circleMarker(toLL(name),{radius:9,color:route.color,fillColor:st.color,fillOpacity:1,weight:3}).addTo(detailLayerGroup).bindTooltip(String(seq),{permanent:true,direction:'center',className:'seq-tip'}).bindPopup('<b>'+String(seq)+'. '+((HUBS[name]&&HUBS[name].label)||name)+'</b><br>'+route.name+'<br>相邻最高交通等级：'+st.label);});map.fitBounds(L.latLngBounds(route.chain.map(toLL)),{padding:[30,30]});}
+    function renderOverview(){const box=document.getElementById('route-detail'),nodes=allNoteNodes().length,links=allNoteLinks().length;box.innerHTML='<div class="rd-head"><h4>笔记六条线路概览</h4><span class="rd-tag">全部节点 + 交通分段</span></div><p class="note">总览地图共显示 '+nodes+' 个独立点位和 '+links+' 个交通分段。线条颜色代表相邻点位之间的国庆典型交通等级；点击任意线段或节点可查看对应说明。</p><div class="rd-stats"><div class="rd-stat"><b>经典闭环</b><strong>小环 / 色达 / 九寨沟</strong></div><div class="rd-stat"><b>组合大环</b><strong>川西大环线</strong></div><div class="rd-stat"><b>组合往返</b><strong>稻城环线</strong></div><div class="rd-stat"><b>越野环线</b><strong>格聂南线</strong></div><div class="rd-stat"><b>地图数据</b><strong>'+nodes+' 点 / '+links+' 段</strong></div></div>';}
+    function renderDetail(route){const box=document.getElementById('route-detail'),links=routeLinks(route),chainHtml=route.chain.map((n,i)=>'<b>'+(i+1)+'</b>'+((HUBS[n]&&HUBS[n].label)||n)).join(' → '),segsHtml=links.map(link=>{const st=LEVELS[link.level];return '<div class="rd-seg"><i style="background:'+st.color+'"></i><span class="lvl '+st.cls+'" style="background:'+st.color+'">'+st.label+'</span><div><b>'+link.name+'</b><span class="desc">'+link.from+' → '+link.to+' · '+link.desc+'</span></div></div>';}).join('');box.innerHTML='<div class="rd-head"><h4>'+route.name+'</h4><span class="rd-tag">'+route.kind+'</span><span class="rd-tag">推荐 '+route.score+' / 10</span></div><div class="rd-stats"><div class="rd-stat"><b>线路形态</b><strong>'+route.kind+'</strong></div><div class="rd-stat"><b>建议周期</b><strong>'+route.days+'</strong></div><div class="rd-stat"><b>参考里程</b><strong>'+route.dist+'</strong></div><div class="rd-stat"><b>最高海拔</b><strong>'+route.alt+'</strong></div><div class="rd-stat"><b>总评</b><strong><span class="grade '+route.scoreCls+'">'+route.score+'</span></strong></div></div><div class="rd-chain"><b>途经顺序</b>'+chainHtml+'</div><div class="rd-cols"><div class="rd-box"><b class="title">核心景点</b><ul>'+route.spots.map(s=>'<li>'+s+'</li>').join('')+'</ul></div><div class="rd-box"><b class="title">主要风险</b><ul>'+route.risks.map(r=>'<li>'+r+'</li>').join('')+'</ul></div></div><div class="rd-segs"><b style="color:var(--navy)">逐段交通情况（'+links.length+' 个路段）</b>'+segsHtml+'</div><div class="rd-verdict"><span class="grade '+route.scoreCls+'">'+route.score+'</span><b>'+route.name+'点评：</b>'+route.verdict+'</div>';}
+    function selectRoute(id){document.querySelectorAll('.route-chip').forEach(c=>c.classList.toggle('active',c.dataset.route===id));if(id==='all'){clearHighlight();baseLayerGroup&&baseLayerGroup.eachLayer(layer=>layer.setStyle&&layer.setStyle({opacity:layer.options.baseOpacity||.8}));hubLayerGroup&&hubLayerGroup.eachLayer(layer=>layer.setStyle&&layer.setStyle({opacity:1,fillOpacity:.95}));if(map){const all=allNoteNodes().map(toLL);map.fitBounds(L.latLngBounds(all),{padding:[26,26]});}renderOverview();try{history.replaceState(null,'','#routes-overview');}catch(e){}return;}const route=NOTE_ROUTES.find(r=>r.id===id);if(!route)return;highlightRoute(route);renderDetail(route);try{history.replaceState(null,'','#route-'+id);}catch(e){}}
     function bindPicker(){const picker=document.getElementById('route-picker');const all=document.createElement('button');all.type='button';all.className='route-chip active';all.dataset.route='all';all.innerHTML='<span class="dot" style="background:#123452"></span>全部概览';all.addEventListener('click',()=>selectRoute('all'));picker.appendChild(all);NOTE_ROUTES.forEach(route=>{const chip=document.createElement('button');chip.type='button';chip.className='route-chip';chip.dataset.route=route.id;chip.innerHTML='<span class="dot" style="background:'+route.color+'"></span>'+route.name+'<small>'+route.kind+'</small>';chip.addEventListener('click',()=>selectRoute(route.id));picker.appendChild(chip);});const applyHash=()=>{const m=location.hash.match(/^#route-(\w+)$/);if(m&&NOTE_ROUTES.some(r=>r.id===m[1]))selectRoute(m[1]);else selectRoute('all');};applyHash();window.addEventListener('hashchange',applyHash);}
     window.addEventListener('load',()=>{initMap();bindPicker();});
   </script>
