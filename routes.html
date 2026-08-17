@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>川西经典线路分析 · 国庆拥堵 / 景点 / 风险 / 周期</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <style>
+    :root { --navy:#123452; --blue:#197b91; --sky:#dff2f2; --mint:#2f8b72; --gold:#e0a52f; --coral:#e97860; --red:#c55246; --ink:#193244; --muted:#687b86; --line:#d6e4e6; --pale:#f3f9f8; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; color:var(--ink); background:#e8f0f1; font-family:"Microsoft YaHei","Noto Sans CJK SC",Arial,sans-serif; line-height:1.6; }
+    .shell { max-width:1180px; margin:0 auto; padding:24px; }
+    header { position:relative; overflow:hidden; background:var(--navy); color:white; padding:28px 34px 30px; border-bottom:6px solid var(--gold); border-radius:0 0 10px 10px; }
+    header::after { content:""; position:absolute; right:28px; top:18px; width:116px; height:116px; border:2px solid rgba(255,255,255,.16); border-radius:50%; box-shadow:0 0 0 18px rgba(255,255,255,.05), 0 0 0 36px rgba(255,255,255,.035); }
+    .eyebrow { color:#a9e0d8; font-size:11px; font-weight:700; letter-spacing:1.6px; }
+    header h1 { margin:0 0 8px; font-size:30px; line-height:1.2; }
+    header p { margin:0; color:#d9e7f3; font-size:15px; }
+    .header-badges { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+    .header-badges span { padding:4px 9px; border:1px solid rgba(255,255,255,.2); border-radius:999px; background:rgba(255,255,255,.1); color:#f7fbfa; font-size:12px; }
+    .home-link { display:inline-block; margin-top:14px; padding:6px 12px; border:1px solid rgba(255,255,255,.3); border-radius:999px; color:#fff; font-size:12px; text-decoration:none; }
+    .home-link:hover { background:rgba(255,255,255,.15); }
+    section { background:white; border:1px solid var(--line); border-radius:10px; margin:18px 0; padding:20px; box-shadow:0 8px 22px rgba(34,71,79,.045); }
+    h2 { margin:0 0 12px; padding-bottom:8px; color:var(--navy); border-bottom:3px solid var(--gold); font-size:21px; }
+    h3 { margin:18px 0 8px; color:var(--blue); font-size:16px; }
+    p { margin:8px 0; font-size:14px; }
+    .note { color:var(--muted); font-size:12px; }
+    .legend { display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 14px; }
+    .legend span { display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--muted); }
+    .legend i { width:22px; height:5px; border-radius:3px; }
+    .legend .dot { width:10px; height:10px; border-radius:50%; }
+    #map { height:560px; border:1px solid var(--line); border-radius:8px; }
+    .map-note { margin-top:8px; }
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th { background:var(--navy); color:white; text-align:left; padding:9px; }
+    th:first-child { border-radius:6px 0 0 0; }
+    th:last-child { border-radius:0 6px 0 0; }
+    td { border:1px solid var(--line); padding:9px; vertical-align:top; line-height:1.55; }
+    tr:nth-child(even) td { background:#f8fafc; }
+    .grade { display:inline-block; min-width:64px; padding:3px 10px; border-radius:999px; color:#fff; font-weight:700; font-size:12px; text-align:center; }
+    .grade.s1 { background:var(--mint); }
+    .grade.s2 { background:var(--blue); }
+    .grade.s3 { background:var(--gold); }
+    .grade.s4 { background:var(--coral); }
+    .grade.s5 { background:var(--red); }
+    .pill { display:inline-block; padding:2px 8px; border-radius:999px; font-size:11px; font-weight:700; }
+    .pill.red { background:#fdecea; color:var(--red); }
+    .pill.gold { background:#fdf3dd; color:#8b6417; }
+    .pill.green { background:#e6f5ef; color:#26766d; }
+    .pill.blue { background:#e8f2f8; color:var(--blue); }
+    .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+    .card { padding:14px; border:1px solid var(--line); border-radius:8px; background:#f8fcfb; }
+    .card b { color:var(--navy); }
+    .card p { margin:5px 0 0; font-size:13px; color:var(--muted); }
+    .summary-box { padding:16px 18px; border-left:5px solid var(--mint); background:#edf8f4; border-radius:0 8px 8px 0; }
+    .summary-box b { color:var(--navy); }
+    .footnote { color:var(--muted); font-size:11px; margin-top:12px; line-height:1.7; }
+    footer { color:var(--muted); font-size:12px; padding:4px 0 20px; }
+    @media (max-width:900px) { .cards { grid-template-columns:1fr; } #map { height:420px; } }
+    @media print { body { background:white; } .shell { max-width:none; padding:0; } #map { display:none; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="eyebrow">WEST SICHUAN · ROUTE INTELLIGENCE</div>
+      <h1>川西经典线路分析</h1>
+      <p>国庆拥堵 · 景点密度 · 风险结构 · 游玩周期 · 推荐系数</p>
+      <div class="header-badges"><span>6 条经典线路</span><span>拥堵热力渲染</span><span>风险分层</span><span>数据为规划参考</span></div>
+      <a class="home-link" href="index.html">← 返回主路线图</a>
+    </header>
+
+    <section>
+      <h2>一、国庆塞车分析（地图渲染）</h2>
+      <p>下图为川西主要通道的国庆拥堵画像：颜色代表典型拥堵等级（红 = 常发严重拥堵，橙 = 间歇拥堵，黄 = 缓行，绿 = 基本通畅）。基于历年国庆公开路况与社区反馈（如“10.3 成都到新都桥 12 小时”“折多山段每天遇堵车逆行加塞”等）整理，用于相对比较而非实时导航。</p>
+      <div class="legend">
+        <span><i style="background:#c0392b"></i>严重拥堵（多日均现）</span>
+        <span><i style="background:#e97860"></i>间歇拥堵（早晚高峰）</span>
+        <span><i style="background:#e0a52f"></i>缓行（车多但可动）</span>
+        <span><i style="background:#2f8b72"></i>基本通畅</span>
+        <span><span class="dot" style="background:#123452"></span>枢纽节点</span>
+      </div>
+      <div id="map"></div>
+      <p class="note map-note">拖动查看全区域；点击线路可看该通道的拥堵说明。底图来自 OpenStreetMap，需联网加载。</p>
+      <h3>拥堵规律摘要</h3>
+      <div class="cards">
+        <div class="card"><b>10/1 出城潮</b><p>成都西向放射线（成雅、成名高速）上午集中拥堵；越早出发越被动，前夜出发或午后错峰更有效。</p></div>
+        <div class="card"><b>10/3–10/4 中段高峰</b><p>折多山、新都桥、四姑娘山沿线为全国热门，日岔口排队 1–3 小时常见；高峰日“成都—新都桥”曾达 12 小时。</p></div>
+        <div class="card"><b>10/5–10/6 返城潮</b><p>康定/泸定/映秀方向返程车流叠加，高速入口和汶马段压车；返程日不要安排任何景点。</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>二、景点分析</h2>
+      <table>
+        <thead><tr><th>线路</th><th>核心景点</th><th>景色类型</th><th>国庆人流</th><th>拍照/出片效率</th></tr></thead>
+        <tbody>
+          <tr><td>318 康定—新都桥—理塘线</td><td>折多山、新都桥、理塘、姊妹湖</td><td>雪山、高原、光影</td><td><span class="pill red">极高</span></td><td>高，但机位排队严重</td></tr>
+          <tr><td>川西小环线（四姑娘山—丹巴—新都桥）</td><td>四姑娘山双桥沟、丹巴藏寨、塔公</td><td>雪山、藏寨、草原</td><td><span class="pill red">极高</span></td><td>高，双桥沟摆渡车缓解</td></tr>
+          <tr><td>大环线（317+318）</td><td>色达、甘孜、新都桥、稻城亚丁</td><td>人文+自然全覆盖</td><td><span class="pill gold">中高</span></td><td>极高，但体力消耗大</td></tr>
+          <tr><td>317 北线（马尔康—甘孜—德格）</td><td>色达、卡萨湖、新路海</td><td>人文、湖泊、草原</td><td><span class="pill blue">中</span></td><td>中高，人文题材独特</td></tr>
+          <tr><td>稻城亚丁线</td><td>海子山、亚丁三神山</td><td>雪山、湖泊、徒步</td><td><span class="pill red">极高</span></td><td>极高，但门票+观光车双重排队</td></tr>
+          <tr><td>低拥堵环线（理县—甘孜—道孚—丹巴）</td><td>甘孜腹地、道孚民居、中路藏寨</td><td>草原、藏寨、湖泊</td><td><span class="pill green">低-中</span></td><td>中，胜在人少清净</td></tr>
+        </tbody>
+      </table>
+      <p class="note">“人流”为国庆典型水平：极高 = 日常需排队 1h+ 或限流；中 = 主要在核心观景台排队；低-中 = 仅局部节点人多。</p>
+    </section>
+
+    <section>
+      <h2>三、风险分析</h2>
+      <table>
+        <thead><tr><th>线路</th><th>最高海拔</th><th>驾驶难度</th><th>主要风险点</th><th>风险评级</th></tr></thead>
+        <tbody>
+          <tr><td>318 康定—理塘线</td><td>4,298m（折多山）</td><td>中高</td><td>浓雾、暗冰、大车流；高反</td><td><span class="grade s4">高</span></td></tr>
+          <tr><td>川西小环线</td><td>4,400m+（巴郎山）</td><td>中</td><td>巴郎山弯道、双桥沟高反、丹巴段窄路</td><td><span class="grade s3">中高</span></td></tr>
+          <tr><td>大环线</td><td>4,700m+</td><td>高</td><td>超长里程、高海拔住宿、疲劳驾驶</td><td><span class="grade s5">很高</span></td></tr>
+          <tr><td>317 北线</td><td>4,300m+</td><td>中高</td><td>补给间隔长、色达限流政策变动</td><td><span class="grade s3">中高</span></td></tr>
+          <tr><td>稻城亚丁线</td><td>4,700m（波瓦山）</td><td>高</td><td>长里程+景区徒步海拔 4,000m+</td><td><span class="grade s5">很高</span></td></tr>
+          <tr><td>低拥堵环线</td><td>约 4,000m（垭口）</td><td>中</td><td>远线补给少、道孚段信号弱</td><td><span class="grade s2">中</span></td></tr>
+        </tbody>
+      </table>
+      <p class="note">风险评级综合：海拔与高反暴露、道路条件、拥堵致滞留概率、救援与补给可达性。所有线路均不建议夜驾与单人驾驶。</p>
+    </section>
+
+    <section>
+      <h2>四、游玩周期</h2>
+      <table>
+        <thead><tr><th>线路</th><th>最短天数</th><th>舒适天数</th><th>推荐节奏</th></tr></thead>
+        <tbody>
+          <tr><td>318 康定—新都桥段</td><td>3 天</td><td>4–5 天</td><td>康定 1 晚 + 新都桥 1–2 晚，日落机位留足等待时间</td></tr>
+          <tr><td>川西小环线</td><td>4 天</td><td>6–7 天</td><td>四姑娘山 2 晚 + 丹巴 1–2 晚 + 新都桥 1 晚</td></tr>
+          <tr><td>大环线</td><td>7 天</td><td>9–11 天</td><td>人文段（色达/甘孜）与风景段（新都桥/亚丁）各留缓冲</td></tr>
+          <tr><td>317 北线</td><td>5 天</td><td>7–8 天</td><td>马尔康 1 晚 + 甘孜 2 晚 + 德格方向按需延伸</td></tr>
+          <tr><td>稻城亚丁线</td><td>5 天</td><td>7–8 天</td><td>去程 2 天 + 亚丁 2 天 + 返程 2 天，不赶夜路</td></tr>
+          <tr><td>低拥堵环线</td><td>6 天</td><td>7–8 天</td><td>D3 长转场后必须接缓冲日；党岭等支线按天气决定</td></tr>
+        </tbody>
+      </table>
+      <p class="note">“最短天数”指纯打卡可行性；“舒适天数”含天气冗余、拍摄等待与驾驶轮换，国庆出行建议按舒适天数规划。</p>
+    </section>
+
+    <section>
+      <h2>五、总结与推荐系数</h2>
+      <table>
+        <thead><tr><th>线路</th><th>风景</th><th>人文</th><th>低拥堵</th><th>安全性</th><th>总评</th></tr></thead>
+        <tbody>
+          <tr><td>川西小环线</td><td>★★★★★</td><td>★★★★</td><td>★★</td><td>★★★★</td><td><span class="grade s3">8.5 / 10</span></td></tr>
+          <tr><td>低拥堵环线（本站主推）</td><td>★★★★</td><td>★★★★</td><td>★★★★★</td><td>★★★★</td><td><span class="grade s1">8.8 / 10</span></td></tr>
+          <tr><td>317 北线</td><td>★★★★</td><td>★★★★★</td><td>★★★★</td><td>★★★</td><td><span class="grade s2">8.2 / 10</span></td></tr>
+          <tr><td>318 康定—理塘线</td><td>★★★★★</td><td>★★★</td><td>★★</td><td>★★★</td><td><span class="grade s3">7.5 / 10</span></td></tr>
+          <tr><td>稻城亚丁线</td><td>★★★★★</td><td>★★★</td><td>★★</td><td>★★</td><td><span class="grade s3">7.8 / 10</span></td></tr>
+          <tr><td>大环线</td><td>★★★★★</td><td>★★★★★</td><td>★</td><td>★★</td><td><span class="grade s4">6.5 / 10</span></td></tr>
+        </tbody>
+      </table>
+      <div class="summary-box">
+        <b>结论：</b>国庆 7 天窗口内，<b>低拥堵环线</b>（8.8）综合最优——用中等风景密度换取通达性与安全冗余；<b>川西小环线</b>（8.5）风景密度最高，适合愿意早起错峰的队伍；<b>317 北线</b>（8.2）适合人文向；318 主线与稻城亚丁风景顶级但国庆代价大；<b>大环线</b>（6.5）不建议 7 天内硬拼，假期拉长到 10 天以上再考虑。
+      </div>
+      <p class="footnote">推荐系数为本页综合评分（风景/人文/低拥堵/安全性加权），反映国庆场景下的相对取舍，非绝对景观排名。评分依据：高德路网结构与里程、历年国庆公开路况报道、小红书社区实况反馈及本站既有调研。</p>
+    </section>
+
+    <footer>拥堵等级与评分为国庆典型场景的规划参考；出行前 1–3 天请以实时导航、交管通告和景区公告为准。</footer>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script>
+    const hubs=[{name:'成都',gcj:[104.066301,30.572961]},{name:'康定',gcj:[101.962600,30.057100]},{name:'新都桥',gcj:[101.519100,30.053200]},{name:'理塘',gcj:[100.268000,29.996000]},{name:'马尔康',gcj:[102.206386,31.905799]},{name:'甘孜',gcj:[99.991683,31.622731]},{name:'道孚',gcj:[101.125157,30.979486]},{name:'丹巴',gcj:[101.890540,30.878618]},{name:'四姑娘山镇',gcj:[102.536500,31.103200]},{name:'理县',gcj:[103.163284,31.435831]},{name:'稻城',gcj:[100.298000,29.037000]},{name:'色达',gcj:[100.332000,32.267000]},{name:'德格',gcj:[98.580000,31.806000]}];
+    const segments=[
+      {name:'成都 → 雅安 → 泸定 → 康定（G4218 / 318 起步段）',level:'severe',desc:'国庆出城与折多山前叠加，早高峰常发性拥堵；10/1 与 10/5–10/6 最重。',pts:[[104.066301,30.572961],[103.041000,30.010000],[102.234000,29.914000],[101.962600,30.057100]]},
+      {name:'康定 → 折多山垭口 → 新都桥（318 核心）',level:'severe',desc:'“折多山段每天遇堵车、逆行、加塞”；浓雾+暗冰+车流三重叠加，全天不定时排队。',pts:[[101.962600,30.057100],[101.860000,30.090000],[101.700000,30.070000],[101.519100,30.053200]]},
+      {name:'新都桥 → 雅江 → 理塘（318 中段）',level:'moderate',desc:'高尔寺山、剪子弯山隧道化后改善，但节假日车流大，早晚缓行；理塘城区易堵。',pts:[[101.519100,30.053200],[101.084000,30.033000],[100.268000,29.996000]]},
+      {name:'理塘 → 海子山 → 稻城 → 亚丁',level:'moderate',desc:'里程长、补给少；亚丁景区门票+观光车双重排队，10/3–10/4 高峰日排队 2h+。',pts:[[100.268000,29.996000],[99.770000,29.460000],[100.298000,29.037000],[100.130000,28.680000]]},
+      {name:'成都 → 映秀 → 理县 → 马尔康（G4217 / 317 西段）',level:'mild',desc:'汶马高速贯通后通行能力较好；映秀出入口与隧道群节假日缓行，整体优于 318。',pts:[[104.066301,30.572961],[103.485000,31.006000],[103.163284,31.435831],[102.206386,31.905799]]},
+      {name:'马尔康 → 炉霍 → 甘孜（317 深段）',level:'clear',desc:'车流显著稀疏，注意补给间隔与加油；牧区路段注意牲畜横穿。',pts:[[102.206386,31.905799],[100.677000,31.391000],[99.991683,31.622731]]},
+      {name:'甘孜 → 道孚 → 丹巴（熊猫大道）',level:'clear',desc:'低拥堵环线主轴：路况良好、车少；道孚—丹巴段弯多临崖，白天通过即可。',pts:[[99.991683,31.622731],[101.125157,30.979486],[101.890540,30.878618]]},
+      {name:'丹巴 → 小金 → 四姑娘山镇（巴郎山方向）',level:'moderate',desc:'小金段窄路会车慢；巴郎山垭口节假日车多缓行，隧道通车后压力缓解。',pts:[[101.890540,30.878618],[102.363000,30.999000],[102.536500,31.103200]]},
+      {name:'四姑娘山镇 → 映秀 → 成都（成阿通道）',level:'severe',desc:'国庆返程主通道之一，10/5–10/6 映秀汇流点常态化拥堵，避开尾日返程。',pts:[[102.536500,31.103200],[103.485000,31.006000],[104.066301,30.572961]]},
+      {name:'甘孜 → 色达方向（317 北延）',level:'clear',desc:'车流小、视野开阔；注意色达县住宿紧张与限流政策需提前核实。',pts:[[99.991683,31.622731],[100.332000,32.267000]]},
+      {name:'甘孜 → 德格 → 新路海（317 西延）',level:'clear',doc:'',pts:[[99.991683,31.622731],[98.580000,31.806000]]}
+    ];
+    const levelStyles={severe:{color:'#c0392b',weight:5,opacity:.85,label:'严重拥堵'},moderate:{color:'#e97860',weight:5,opacity:.85,label:'间歇拥堵'},mild:{color:'#e0a52f',weight:4,opacity:.8,label:'缓行'},clear:{color:'#2f8b72',weight:4,opacity:.8,label:'基本通畅'}};
+    function outOfChina(lon,lat){return lon<72.004||lon>137.8347||lat<0.8293||lat>55.8271;}
+    function transformLat(x,y){let r=-100+2*x+3*y+.2*y*y+.1*x*y+.2*Math.sqrt(Math.abs(x));r+=(20*Math.sin(6*x*Math.PI)+20*Math.sin(2*x*Math.PI))*2/3;r+=(20*Math.sin(y*Math.PI)+40*Math.sin(y/3*Math.PI))*2/3;r+=(160*Math.sin(y/12*Math.PI)+320*Math.sin(y*Math.PI/30))*2/3;return r;}
+    function transformLon(x,y){let r=300+x+2*y+.1*x*x+.1*x*y+.1*Math.sqrt(Math.abs(x));r+=(20*Math.sin(6*x*Math.PI)+20*Math.sin(2*x*Math.PI))*2/3;r+=(20*Math.sin(x*Math.PI)+40*Math.sin(x/3*Math.PI))*2/3;r+=(150*Math.sin(x/12*Math.PI)+300*Math.sin(x/30*Math.PI))*2/3;return r;}
+    function gcj02ToWgs84(lon,lat){if(outOfChina(lon,lat))return[lat,lon];const a=6378245,ee=.00669342162296594323,rad=lat/180*Math.PI;let dLat=transformLat(lon-105,lat-35),dLon=transformLon(lon-105,lat-35),magic=1-ee*Math.sin(rad)*Math.sin(rad),sqrt=Math.sqrt(magic);dLat=dLat*180/((a*(1-ee))/(magic*sqrt)*Math.PI);dLon=dLon*180/(a/sqrt*Math.cos(rad)*Math.PI);return[lat-dLat,lon-dLon];}
+    function initMap(){const el=document.getElementById('map');if(!window.L){el.innerHTML='<div style="padding:24px;color:#687b86">交互地图未加载（无网络），上方表格仍可查看拥堵分析。</div>';return;}const map=L.map('map',{scrollWheelZoom:false}).setView([30.9,101.3],7);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);segments.forEach(seg=>{const style=levelStyles[seg.level];const latlngs=seg.pts.map(p=>gcj02ToWgs84(p[0],p[1]));L.polyline(latlngs,{color:style.color,weight:style.weight,opacity:style.opacity}).addTo(map).bindPopup('<b>'+seg.name+'</b><br>'+style.label+'<br>'+(seg.desc||''));});hubs.forEach(h=>{const ll=gcj02ToWgs84(h.gcj[0],h.gcj[1]);L.circleMarker(ll,{radius:6,color:'#123452',fillColor:'#fff',fillOpacity:1,weight:2.5}).addTo(map).bindPopup('<b>'+h.name+'</b>');});}
+    window.addEventListener('load',initMap);
+  </script>
+</body>
+</html>
