@@ -69,6 +69,31 @@
     .route-summary-item b { display:block; color:var(--muted); font-size:11px; }
     .route-summary-item strong { display:block; margin:2px 0 1px; color:var(--navy); font-size:20px; }
     .route-summary-item span { color:var(--muted); font-size:11px; }
+    .plan-tabs { display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 16px; }
+    .plan-tab { padding:8px 13px; border:1px solid #c5dfe0; border-radius:999px; background:#f1f8f7; color:var(--blue); cursor:pointer; font:inherit; font-size:13px; font-weight:700; }
+    .plan-tab.active { border-color:var(--navy); background:var(--navy); color:white; }
+    .plan-panel { display:none; }
+    .plan-panel.active { display:block; }
+    .plan-intro { display:grid; grid-template-columns:1fr 210px; gap:18px; align-items:center; padding:16px; border:1px solid var(--line); border-radius:8px; background:#f7fbfa; }
+    .plan-kicker { color:var(--coral); font-size:11px; font-weight:700; letter-spacing:.6px; }
+    .plan-intro h3 { margin:3px 0 5px; color:var(--navy); font-size:20px; }
+    .plan-intro p { margin:0; color:var(--muted); font-size:13px; }
+    .plan-score { padding:12px; border-left:4px solid var(--gold); background:#fff7e4; color:#6d541e; font-size:12px; line-height:1.7; }
+    .plan-score strong { display:block; color:var(--navy); font-size:17px; }
+    .plan-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:12px; }
+    .plan-card { padding:13px; border:1px solid var(--line); border-radius:8px; background:white; }
+    .plan-card.highlight { border-top:4px solid var(--mint); }
+    .plan-card.warn { border-top:4px solid var(--coral); }
+    .plan-card b { color:var(--navy); }
+    .plan-card p { margin:5px 0 0; color:var(--muted); font-size:13px; }
+    .plan-day-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:12px; }
+    .plan-day { padding:12px 14px; border:1px solid var(--line); border-left:4px solid var(--blue); border-radius:7px; background:white; }
+    .plan-day h4 { margin:0 0 4px; color:var(--blue); font-size:15px; }
+    .plan-day p { margin:3px 0; font-size:13px; }
+    .plan-day .mini-metrics { display:flex; flex-wrap:wrap; gap:5px; margin:6px 0; }
+    .plan-day .mini-metrics span { padding:2px 7px; border-radius:999px; background:#eef7f6; color:#246b69; font-size:10px; font-weight:700; }
+    .plan-recommend { margin-top:12px; padding:12px 14px; border-left:4px solid var(--mint); background:#edf8f4; color:#285f55; font-size:13px; }
+    .option-table { margin-top:14px; font-size:13px; }
     .gallery { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; align-items:start; }
     .gallery figure { align-self:start; margin:0; border:1px solid var(--line); border-radius:7px; background:#fff; overflow:hidden; transition:transform .18s ease, box-shadow .18s ease; }
     .gallery figure:hover { transform:translateY(-3px); box-shadow:0 9px 18px rgba(28,71,78,.12); }
@@ -107,9 +132,9 @@
     li { margin:4px 0; }
     footer { color:var(--muted); font-size:12px; padding:4px 0 20px; }
     @media (max-width:1100px) { .photo-grid { grid-template-columns:repeat(6,1fr); } }
-    @media (max-width:900px) { .gallery { grid-template-columns:repeat(2,1fr); } .photo-grid { grid-template-columns:repeat(2,1fr); } .photo-card, .photo-card:nth-child(4), .photo-card:nth-child(5) { grid-column:auto; } .route-summary { grid-template-columns:repeat(2,1fr); } }
-    @media (max-width:760px) { .shell { padding:12px; } header { padding:22px 20px; } header h1 { font-size:25px; } .stats, .day-grid, .two, .gallery, .route-summary { grid-template-columns:1fr; } .photo-grid { grid-template-columns:repeat(2,1fr); } .photo-group-head { display:block; } .photo-group-tag { display:inline-block; margin-top:8px; } section { padding:14px; } #map { height:380px; } }
-    @media print { body { background:white; } .shell { max-width:none; padding:0; } #map { display:none; } }
+    @media (max-width:900px) { .gallery { grid-template-columns:repeat(2,1fr); } .photo-grid { grid-template-columns:repeat(2,1fr); } .photo-card, .photo-card:nth-child(4), .photo-card:nth-child(5) { grid-column:auto; } .route-summary, .plan-grid { grid-template-columns:repeat(2,1fr); } .plan-intro { grid-template-columns:1fr; } }
+    @media (max-width:760px) { .shell { padding:12px; } header { padding:22px 20px; } header h1 { font-size:25px; } .stats, .day-grid, .two, .gallery, .route-summary, .plan-grid, .plan-day-grid { grid-template-columns:1fr; } .photo-grid { grid-template-columns:repeat(2,1fr); } .photo-group-head { display:block; } .photo-group-tag { display:inline-block; margin-top:8px; } section { padding:14px; } #map { height:380px; } }
+    @media print { body { background:white; } .shell { max-width:none; padding:0; } #map { display:none; } .plan-tabs { display:none; } .plan-panel { display:block !important; } }
   </style>
 </head>
 <body>
@@ -169,6 +194,42 @@
         <article class="day critical"><h3>D6 道孚 → 玉科/党岭 → 丹巴 <span class="risk high">高</span></h3><div class="day-metrics"><span>主线 163 km</span><span class="drive">约 3h25</span><span class="risk-note">垭口约 3,800m+</span></div><p>道孚→丹巴主线约 163 km；玉科/党岭支线会额外增加 2–4 小时。雨雪、浓雾或信号不稳时直接走主线。</p><a class="nav" target="_blank" href="https://uri.amap.com/navigation?from=101.125157,30.979486&to=101.890540,30.878618&mode=car&policy=1">打开主线导航</a></article>
         <article class="day critical"><h3>D7 丹巴 → 成都 <span class="risk high">中高</span></h3><div class="day-metrics"><span>约 350–380 km</span><span class="drive">约 6–8h</span><span class="risk-note">持续下撤 / 返程拥堵</span></div><p>只做返程，不再叠加四姑娘山；国庆返程高峰预留半天到一天缓冲，不要接当天航班。</p><a class="nav" target="_blank" href="https://uri.amap.com/navigation?from=101.890540,30.878618&to=104.066301,30.572961&mode=car&policy=1">打开高德路线</a></article>
       </div>
+    </section>
+    <section class="plan-choice">
+      <h2>方案选择：四姑娘山要不要加入？</h2>
+      <p class="map-note">这里把“看四姑娘山”和“保留甘孜腹地”拆成两个可切换方案。核心不是多塞一个景点，而是决定你要雪山密度，还是低拥堵和路线纵深。</p>
+      <div class="plan-tabs" role="tablist" aria-label="路线方案选择">
+        <button class="plan-tab active" type="button" role="tab" aria-selected="true" data-plan="plan-a">A · 甘孜腹地低拥堵</button>
+        <button class="plan-tab" type="button" role="tab" aria-selected="false" data-plan="plan-b">B · 四姑娘山雪山优先</button>
+      </div>
+      <article id="plan-a" class="plan-panel active" role="tabpanel">
+        <div class="plan-intro"><div><span class="plan-kicker">当前主方案</span><h3>保留甘孜腹地，牺牲热门雪山</h3><p>适合想看路线纵深、藏区人文和低密度风景的人。四姑娘山不放进 7 天主线，D4 继续作为天气和身体缓冲日。</p></div><div class="plan-score"><strong>低拥堵优先</strong>主风险：D3 约 482 km 长转场<br>景色类型：河谷、草原、湖泊、藏寨</div></div>
+        <div class="plan-grid"><div class="plan-card highlight"><b>优点</b><p>景区排队少，支线可以按天气删减，路线有撤退空间。</p></div><div class="plan-card"><b>代价</b><p>看不到四姑娘山完整雪峰景观，阿坝段以转场和村寨为主。</p></div><div class="plan-card warn"><b>不要再叠加</b><p>稻城亚丁、格聂南线和四姑娘山都不适合同时塞进这条 7 天路线。</p></div></div>
+      </article>
+      <article id="plan-b" class="plan-panel" role="tabpanel">
+        <div class="plan-intro"><div><span class="plan-kicker">四姑娘山替换方案</span><h3>四姑娘山 → 丹巴 → 道孚 → 塔公/新都桥</h3><p>这是一条“雪山优先”的 7 天 6 夜版本：删掉马尔康、炉霍、甘孜深线，把时间换成四姑娘山完整停留和更轻松的返程节奏。</p></div><div class="plan-score"><strong>约 1,100–1,250 km</strong>纯驾驶约 23–27 小时<br>主风险：旺季人流 + 3,200m 以上高海拔</div></div>
+        <div class="plan-day-grid">
+          <article class="plan-day"><h4>D1 成都 → 四姑娘山镇</h4><div class="mini-metrics"><span>约 210–230 km</span><span>4–5h</span><span>住约 3,200m</span></div><p>经理小路或巴郎山进入，下午只做入住和镇上短逛；雨雪时不要继续赶丹巴。</p></article>
+          <article class="plan-day"><h4>D2 双桥沟一日</h4><div class="mini-metrics"><span>景区 6–8h</span><span>高人流</span><span>高海拔</span></div><p>只选一沟，推荐双桥沟。景区摆渡车完成主要移动，不再叠加长坪沟和海子沟。</p></article>
+          <article class="plan-day"><h4>D3 四姑娘山 → 丹巴</h4><div class="mini-metrics"><span>约 170–200 km</span><span>4–5h</span><span>中风险</span></div><p>住丹巴，中路和甲居二选一；不建议当天两个藏寨都跑完。</p></article>
+          <article class="plan-day"><h4>D4 丹巴 → 道孚</h4><div class="mini-metrics"><span>约 163 km</span><span>3h25</span><span>住约 3,000m</span></div><p>这是舒服的山地转场日，抵达后留给县城、人文和休息，不再追多个网红点。</p></article>
+          <article class="plan-day"><h4>D5 道孚 → 塔公 / 墨石 → 新都桥</h4><div class="mini-metrics"><span>约 150–200 km</span><span>4–5h</span><span>择一短停</span></div><p>塔公草原、墨石公园二选一；雨季把垭口当作通过点，晚上住新都桥。</p></article>
+          <article class="plan-day"><h4>D6 新都桥 → 康定</h4><div class="mini-metrics"><span>约 80–100 km</span><span>2–3h</span><span>恢复日</span></div><p>白天慢慢下撤，天气好再加鱼子西或贡嘎观景台；不建议同时追多个日落机位。</p></article>
+          <article class="plan-day"><h4>D7 康定 → 成都</h4><div class="mini-metrics"><span>约 330–350 km</span><span>5–7h</span><span>返程拥堵</span></div><p>只做返程，国庆最后两天至少留半天到一天缓冲，不接当天紧张航班。</p></article>
+        </div>
+        <div class="plan-grid"><div class="plan-card highlight"><b>双桥沟：最推荐</b><p>观光车覆盖、景色类型丰富、徒步压力相对低，最适合第一次去和 7 天窗口。</p></div><div class="plan-card"><b>长坪沟：徒步版</b><p>森林和雪山更有纵深，但需要更长徒步或骑马，建议额外留半天到一天。</p></div><div class="plan-card warn"><b>海子沟：不建议硬塞</b><p>体力和海拔要求最高，除非队伍明确以徒步为主，否则只保留为下一次专线。</p></div></div>
+        <div class="plan-recommend"><b>我的推荐组合：</b>第一次去选“D2 双桥沟 + D3 丹巴中路 + D5 道孚/墨石二选一”。这样雪山、藏寨、草原和异质地貌都有，且不会把四姑娘山、丹巴、塔公、墨石在同一天硬串起来。</div>
+      </article>
+      <h3 class="gallery-heading">除了四姑娘山，还能加什么？</h3>
+      <table class="option-table"><thead><tr><th>备选点</th><th>与 B 方案兼容度</th><th>建议增加时间</th><th>新增景色</th><th>怎么放</th></tr></thead><tbody>
+        <tr><td>丹巴中路 / 甲居</td><td>强兼容</td><td>0.5–1 天</td><td>藏寨、古碉、晨雾</td><td>D3 住丹巴，二选一，不要两个全打卡</td></tr>
+        <tr><td>道孚 / 墨石 / 塔公</td><td>兼容</td><td>半天–1 天</td><td>草原、异质地貌、垭口</td><td>D5 选一个主点，另一个只顺路短停</td></tr>
+        <tr><td>卡萨湖</td><td>更适合 A</td><td>半天</td><td>高原湖泊、草原</td><td>放在 A 方案 D4，身体或天气不好就留甘孜县城</td></tr>
+        <tr><td>党岭</td><td>弱兼容</td><td>+1–2 天</td><td>雪山、海子、温泉</td><td>必须独立留夜，不和 D6 道孚→丹巴硬串</td></tr>
+        <tr><td>玉龙拉措 / 新路海</td><td>不建议 B 硬加</td><td>+2 天</td><td>冰川湖、森林、寂静感</td><td>从 317 深线单独安排，别把它当顺路景点</td></tr>
+        <tr><td>格聂南线</td><td>单独成线</td><td>+3 天</td><td>花海、神山、村落</td><td>平均海拔和路况更高，另做 5–7 天游线</td></tr>
+        <tr><td>稻城亚丁</td><td>单独成线</td><td>+3 天以上</td><td>雪山、湖泊、长线徒步</td><td>7 天版本继续不加，至少拆出两天返程</td></tr>
+      </tbody></table>
     </section>
     <section>
       <h2>沿线景色与游玩特色</h2>
@@ -296,7 +357,8 @@
     function gcj02ToWgs84(lon,lat){if(outOfChina(lon,lat))return[lat,lon];const a=6378245,ee=.00669342162296594323,rad=lat/180*Math.PI;let dLat=transformLat(lon-105,lat-35),dLon=transformLon(lon-105,lat-35),magic=1-ee*Math.sin(rad)*Math.sin(rad),sqrt=Math.sqrt(magic);dLat=dLat*180/((a*(1-ee))/(magic*sqrt)*Math.PI);dLon=dLon*180/(a/sqrt*Math.cos(rad)*Math.PI);return[lat-dLat,lon-dLon];}
     function initMap(){const el=document.getElementById('map');if(!window.L){el.innerHTML='<div style="padding:24px;color:#667583">交互地图未加载，上方示意图和高德导航链接仍可使用。</div>';return;}const ll=points.map(p=>gcj02ToWgs84(p.gcj[0],p.gcj[1]));const map=L.map('map',{scrollWheelZoom:false}).setView([31.1,102.1],7);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);L.polyline(ll,{color:'#b54536',weight:4,dashArray:'10 8'}).addTo(map);points.forEach((p,i)=>L.circleMarker(ll[i],{radius:8,color:'#b54536',fillColor:'#fff',fillOpacity:1,weight:3}).addTo(map).bindPopup('<b>'+p.name+'</b><br>'+p.day));map.fitBounds(L.latLngBounds(ll),{padding:[24,24]});}
     function bindPhotoSources(){document.querySelectorAll('.gallery figure, .photo-card').forEach(figure=>{const image=figure.querySelector('img');if(!image||figure.querySelector('.photo-link'))return;const source=figure.dataset.source||(figure.closest('.photo-group')&&figure.closest('.photo-group').dataset.source);if(!source)return;const imageLink=document.createElement('a');imageLink.className='photo-link';imageLink.href=image.getAttribute('src');imageLink.target='_blank';imageLink.rel='noopener noreferrer';imageLink.setAttribute('aria-label','打开大图：'+(image.alt||'路线图片'));image.parentNode.insertBefore(imageLink,image);imageLink.appendChild(image);const caption=figure.querySelector('figcaption');if(caption&&!caption.querySelector('.source-button')){const sourceLink=document.createElement('a');sourceLink.className='source-button';sourceLink.href=source;sourceLink.target='_blank';sourceLink.rel='noopener noreferrer';sourceLink.textContent=figure.dataset.sourceLabel||(source.includes('commons.wikimedia.org')?'查看 Wikimedia 来源':'查看原始笔记');caption.appendChild(sourceLink);}});}
-    window.addEventListener('load',()=>{initMap();bindPhotoSources();});
+    function bindPlanTabs(){const buttons=[...document.querySelectorAll('.plan-tab')];const panels=[...document.querySelectorAll('.plan-panel')];buttons.forEach(button=>button.addEventListener('click',()=>{const id=button.dataset.plan;buttons.forEach(item=>{const active=item===button;item.classList.toggle('active',active);item.setAttribute('aria-selected',String(active));});panels.forEach(panel=>panel.classList.toggle('active',panel.id===id));}));}
+    window.addEventListener('load',()=>{initMap();bindPhotoSources();bindPlanTabs();});
   </script>
 </body>
 </html>
